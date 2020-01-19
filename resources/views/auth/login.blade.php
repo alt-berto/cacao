@@ -8,7 +8,7 @@
 		    <h2 class="text-center">Iniciar Sesión</h2>
 		    <form class="login-form" method="POST" action="{{ route('login') }}">
                 <div class="form-group">
-                    <label for="exampleInputEmail1" class="text-uppercase">Correo</label>
+                    <label for="exampleInputEmail1" class="text-uppercase">Correo:</label>
                     <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="Escriba su correo" required autocomplete="email" autofocus>
                     @error('email')
                         <span class="invalid-feedback" role="alert">
@@ -17,7 +17,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword1" class="text-uppercase">Contraseña</label>
+                    <label for="exampleInputPassword1" class="text-uppercase">Contraseña:</label>
                     <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Escriba su contraseña"  required autocomplete="current-password">
                     @error('password')
                         <span class="invalid-feedback" role="alert">
