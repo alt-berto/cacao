@@ -15,7 +15,7 @@ class Controller extends BaseController
 
     public function __construct(  ) {
         //
-        $this->middleware('auth');
+        $this->middleware( 'auth' );
         //
         $this->data = array(  );
 
@@ -64,7 +64,7 @@ class Controller extends BaseController
         $this->data['metas'][] = [ 'name' => 'generator', 'content' => 'albert' ];
         $this->data['metas'][] = [ 'name' => 'author', 'content' => 'albert' ];
         $this->data['metas'][] = [ 'name' => 'Description', 'content' => ''];
-        $this->data['metas'][] = [ 'name' => 'csrf-token', 'content' => '{{ csrf_token() }}' ];
+        //$this->data['metas'][] = [ 'name' => 'csrf-token', 'content' => '{{ csrf_token() }}' ];
 
         // Load External CSS Files
         $this->data['css']['externals'][] = 'https://fonts.googleapis.com/css?family=Montserrat:400,700';

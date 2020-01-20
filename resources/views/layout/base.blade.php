@@ -28,9 +28,11 @@
 </head>
 
 <body class="bg-light">
-  <div id="app">
+  <div id="app" >
     @include('layout.header')
-    @yield('content')
+    <div class="container" style="height: 100% !important;  margin-bottom:100%">
+      @yield('content')
+    </div>
     @include('layout.footer')
 
   </div>

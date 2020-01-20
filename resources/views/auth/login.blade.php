@@ -6,11 +6,12 @@
 	<div class="row">
 		<div class="col-md-4 login-sec">
 		    <h2 class="text-center">Iniciar Sesión</h2>
-		    <form class="login-form" method="POST" action="{{ route('login') }}">
+            <form class="login-form" method="POST" action="{{ route('login') }}">
+                {{ csrf_field() }}
                 <div class="form-group">
-                    <label for="exampleInputEmail1" class="text-uppercase">Correo:</label>
-                    <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="Escriba su correo" required autocomplete="email" autofocus>
-                    @error('email')
+                    <label for="exampleInputEmail1" class="text-uppercase">Usuario o Correo:</label>
+                    <input type="text" id="username" name="username" class="form-control @error('username') is-invalid @enderror" value="{{ old('username') }}" placeholder="Escriba su correo" required autocomplete="username" autofocus>
+                    @error('username')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
@@ -33,11 +34,11 @@
                     <small>Recordarme</small>
                     </label>
                     <button type="submit" class="btn btn-login float-right">Acceder</button>
-                    @if (Route::has('password.request'))
+                    {{--@if (Route::has('password.request'))
                         <a class="btn btn-link" href="{{ route('password.request') }}">
                             Recuperar contraseña
                         </a>
-                    @endif
+                    @endif--}}
                 </div>
                 
             </form>

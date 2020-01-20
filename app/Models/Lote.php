@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace Models\App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UnidadProductiva extends Model
+class Lote extends Model
 {
     //
 }
