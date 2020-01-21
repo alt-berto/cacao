@@ -14,8 +14,9 @@
 
 Auth::routes(  );
 
-Route::resource('unidad/productiva','UnidadProductivaController');
-
+Route::resource('unidades/productivas','UnidadProductivaController');
+Route::get('unidad/productiva/create','UnidadProductivaController@create');
+Route::get('unidad/productiva/edit/{id}','UnidadProductivaController@edit');
 
 Route::resource('costos','CostosController');
 Route::get('costo/create','CostosController@create');

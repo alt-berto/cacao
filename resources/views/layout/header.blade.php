@@ -42,10 +42,10 @@
           Unidades productivas <span class="caret"></span>
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{{ URL::to('/') }}" >
+          <a class="dropdown-item" href="{{ URL::to('/unidades/productivas') }}" >
               Listar unidades productivas
           </a>  
-          <a class="dropdown-item" href="{{ URL::to('/') }}" >
+          <a class="dropdown-item" href="{{ URL::to('/unidad/productiva/create') }}" >
             Agregar unidad productiva
         </a>            
       </div>

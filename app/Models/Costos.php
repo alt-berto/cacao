@@ -9,6 +9,8 @@ class Costos extends Model
     //
     protected $table ='costos';
 
+    protected $guarded = [  ];
+
     /**
      * The attributes that are mass assignable.
      *
