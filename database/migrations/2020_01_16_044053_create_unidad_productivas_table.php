@@ -14,8 +14,14 @@ class CreateUnidadProductivasTable extends Migration
     public function up()
     {
         Schema::create('unidad_productivas', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->bigIncrements( 'id' );
+            $table->string( 'name' );
+            $table->string( 'address' )->nullable(  );
+            $table->string( 'lat' )->nullable(  );
+            $table->string( 'long' )->nullable(  );
+            $table->string( 'note' )->nullable(  );
+            $table->boolean( 'isactive' )->nullable( $value = false )->default( true );
+            $table->timestamps(  );
         });
     }
 

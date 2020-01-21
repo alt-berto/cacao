@@ -14,4 +14,22 @@
 
 Auth::routes(  );
 
+Route::resource('unidad/productiva','UnidadProductivaController');
+
+
+Route::resource('costos','CostosController');
+Route::get('costo/create','CostosController@create');
+Route::get('costo/edit/{id}','CostosController@edit');
+
+
+Route::resource('sectores','SectorController');
+
+
+Route::resource('lote/unidad_productiva','LoteUnidadProductivaController');
+
+
+Route::resource('lotes','LoteController');
+
+
+
 Route::get( '/', 'Controller@home' )->name( 'home' );

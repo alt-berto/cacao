@@ -14,8 +14,11 @@ class CreateCostosTable extends Migration
     public function up()
     {
         Schema::create('costos', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+            $table->bigIncrements( 'id' );
+            $table->string( 'name' );
+            $table->string( 'note' )->nullable(  );
+            $table->boolean( 'isactive' )->nullable( $value = false )->default( true );
+            $table->timestamps(  );
         });
     }
 

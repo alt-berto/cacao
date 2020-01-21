@@ -30,7 +30,7 @@
 <body class="bg-light">
   <div id="app" >
     @include('layout.header')
-    <div class="container" style="height: 100% !important;  margin-bottom:100%">
+    <div class="container" style="height: 100% !important;  margin-bottom:50%; margin-top:2.5%;">
       @yield('content')
     </div>
     @include('layout.footer')

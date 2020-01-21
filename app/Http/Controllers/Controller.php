@@ -51,13 +51,16 @@ class Controller extends BaseController
             'internals'  => array(  ),
             'externals'  => array(  )
         );
+
+        $this->data['costos'] = [];
+        $this->data['costo'] = [];
     }
 
     // Load Home Index View
     public function home(  ) {
 
         // Title
-        $this->data['title'] = 'Home - Cacao';
+        $this->data['title'] = 'Home - Cacao Oro';
 
         // Load Metas
         $this->data['metas'][] = [ 'name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=no' ];

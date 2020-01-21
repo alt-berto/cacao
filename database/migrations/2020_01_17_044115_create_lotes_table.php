@@ -14,7 +14,13 @@ class CreateLotesTable extends Migration
     public function up()
     {
         Schema::create('lotes', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->bigIncrements( 'id' );
+            $table->string( 'consecutive' );
+            $table->string( 'name' )->nullable(  );
+            $table->date( 'date' );
+            $table->string( 'note' )->nullable(  );
+            $table->enum( 'status', ['process', 'finished', 'defective' ] )->nullable( $value = false )->default( 'process' );
+            $table->boolean( 'isactive' )->nullable( $value = false )->default( true );
             $table->timestamps();
         });
     }
