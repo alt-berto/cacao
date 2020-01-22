@@ -22,6 +22,7 @@ class CreateSectoresTable extends Migration
             $table->string( 'long' )->nullable(  );
             $table->string( 'note' )->nullable(  );
             $table->boolean( 'isactive' )->nullable( $value = false )->default( true );
+            $table->boolean( 'isdeleted' )->nullable( $value = false )->default( false );
             $table->timestamps(  );
             $table->foreign( 'unidad_productiva_id' )->references( 'id' )->on( 'unidad_productivas' );
         });

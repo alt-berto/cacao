@@ -21,6 +21,7 @@ class CreateLotesTable extends Migration
             $table->string( 'note' )->nullable(  );
             $table->enum( 'status', ['process', 'finished', 'defective' ] )->nullable( $value = false )->default( 'process' );
             $table->boolean( 'isactive' )->nullable( $value = false )->default( true );
+            $table->boolean( 'isdeleted' )->nullable( $value = false )->default( false );
             $table->timestamps();
         });
     }

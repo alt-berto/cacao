@@ -19,6 +19,7 @@ class CreateLoteUnidadProductivasTable extends Migration
             $table->bigInteger( 'sector_id' )->unsigned(  )->index(  );
             $table->string( 'note' )->nullable(  );
             $table->boolean( 'isactive' )->nullable( $value = false )->default( true );
+            $table->boolean( 'isdeleted' )->nullable( $value = false )->default( false );
             $table->timestamps(  );
             $table->foreign( 'lote_id' )->references( 'id' )->on( 'lotes' );
             $table->foreign( 'sector_id' )->references( 'id' )->on( 'sectores' );

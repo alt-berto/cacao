@@ -21,7 +21,7 @@ class SectorController extends Controller
         $user = Auth::user(  ); 
         if ( $user->is_admin ) {
             //
-            $this->data['sectores'] = Sector::with( 'unidadproductiva' )->orderBy('unidad_productiva_id', 'asc')->get(  );
+            $this->data['sectores'] = Sector::where( 'isdeleted', false )->with( 'unidadproductiva' )->orderBy('unidad_productiva_id', 'asc')->get(  );
             // Title
             $this->data['title'] = 'Lista de Sectores - Cacao Oro';
 
@@ -77,7 +77,7 @@ class SectorController extends Controller
         $user = Auth::user(  ); 
         if ( $user->is_admin ) {
 
-            $this->data['unidades_productivas'] = UnidadProductiva::where( 'isactive', true )->get(  );
+            $this->data['unidades_productivas'] = UnidadProductiva::where( 'isdeleted', false )->where( 'isactive', true )->get(  );
 
             // Title
             $this->data['title'] = 'Crear Sector - Cacao Oro';
@@ -179,7 +179,7 @@ class SectorController extends Controller
         $user = Auth::user(  ); 
         if ( $user->is_admin ) {
             //
-            $this->data['unidades_productivas'] = UnidadProductiva::where( 'isactive', true )->get(  );
+            $this->data['unidades_productivas'] = UnidadProductiva::where( 'isdeleted', false )->where( 'isactive', true )->get(  );
             $this->data['sector'] = Sector::where( 'id', $id )->first(  );
 
             // Title
@@ -270,7 +270,7 @@ class SectorController extends Controller
         //
         $sector = Sector::find( $id );
         $name = $sector->name;
-        $sector->delete(  );
+        $sector->update( [ 'isdeleted' => true ] );
         return redirect(  )->back(  )->with( 'success', 'Se ha eliminado correctamente el sector: '.$name ); 
     }
 }

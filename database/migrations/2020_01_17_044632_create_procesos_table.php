@@ -15,6 +15,7 @@ class CreateProcesosTable extends Migration
     {
         Schema::create('procesos', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->boolean( 'isdeleted' )->nullable( $value = false )->default( false );
             $table->timestamps();
         });
     }

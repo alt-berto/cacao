@@ -20,7 +20,7 @@ class UnidadProductivaController extends Controller
          $user = Auth::user(  ); 
          if ( $user->is_admin ) {
              //
-             $this->data['unidades_productivas'] = UnidadProductiva::all(  );
+             $this->data['unidades_productivas'] = UnidadProductiva::where( 'isdeleted', false )->get(  );
              // Title
              $this->data['title'] = 'Lista de Unidades Productivas - Cacao Oro';
  
@@ -262,7 +262,7 @@ class UnidadProductivaController extends Controller
         //
         $in_unidad_productiva = UnidadProductiva::find( $id );
         $name = $in_unidad_productiva->name;
-        $in_unidad_productiva->delete(  );
+        $in_unidad_productiva->update( [ 'isdeleted' => true ] );
         return redirect(  )->back(  )->with( 'success', 'Se ha eliminado correctamente la unidad productiva: '.$name ); 
     }
 }

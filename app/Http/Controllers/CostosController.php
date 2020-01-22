@@ -20,7 +20,7 @@ class CostosController extends Controller
         $user = Auth::user(  ); 
         if ( $user->is_admin ) {
             //
-            $this->data['costos'] = Costos::all(  );
+            $this->data['costos'] = Costos::where( 'isdeleted', false )->get(  );
             // Title
             $this->data['title'] = 'Lista de Costos - Cacao Oro';
 
@@ -251,7 +251,7 @@ class CostosController extends Controller
         //
         $costo = Costos::find( $id );
         $name = $costo->name;
-        $costo->delete(  );
+        $costo->update( [ 'isdeleted' => true ] );
         return redirect(  )->back(  )->with( 'success', 'Se ha eliminado correctamente el costo: '.$name ); 
     }
 }

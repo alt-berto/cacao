@@ -15,6 +15,7 @@ class CreateEtapasTable extends Migration
     {
         Schema::create('etapas', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->boolean( 'isdeleted' )->nullable( $value = false )->default( false );
             $table->timestamps();
         });
     }

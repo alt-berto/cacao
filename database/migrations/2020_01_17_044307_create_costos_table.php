@@ -18,6 +18,7 @@ class CreateCostosTable extends Migration
             $table->string( 'name' );
             $table->string( 'note' )->nullable(  );
             $table->boolean( 'isactive' )->nullable( $value = false )->default( true );
+            $table->boolean( 'isdeleted' )->nullable( $value = false )->default( false );
             $table->timestamps(  );
         });
     }

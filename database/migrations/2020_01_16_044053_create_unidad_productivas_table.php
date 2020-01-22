@@ -21,6 +21,7 @@ class CreateUnidadProductivasTable extends Migration
             $table->string( 'long' )->nullable(  );
             $table->string( 'note' )->nullable(  );
             $table->boolean( 'isactive' )->nullable( $value = false )->default( true );
+            $table->boolean( 'isdeleted' )->nullable( $value = false )->default( false );
             $table->timestamps(  );
         });
     }
