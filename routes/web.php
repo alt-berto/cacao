@@ -24,7 +24,8 @@ Route::get('costo/edit/{id}','CostosController@edit');
 
 
 Route::resource('sectores','SectorController');
-
+Route::get('sector/create','SectorController@create');
+Route::get('sector/edit/{id}','SectorController@edit');
 
 Route::resource('lote/unidad_productiva','LoteUnidadProductivaController');
 

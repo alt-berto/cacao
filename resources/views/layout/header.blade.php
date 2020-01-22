@@ -34,9 +34,9 @@
           </a>  
           <a class="dropdown-item" href="{{ URL::to('/costo/create') }}" >
             Agregar Costo
-        </a>            
-      </div>
-    </li>
+          </a>            
+        </div>
+      </li>
       <li class="nav-item dropdown">
         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
           Unidades productivas <span class="caret"></span>
@@ -50,6 +50,19 @@
         </a>            
       </div>
     </li>
+    <li class="nav-item dropdown">
+      <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+        Sectores <span class="caret"></span>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+        <a class="dropdown-item" href="{{ URL::to('/sectores') }}" >
+            Listar sectores de las unidades productivas
+        </a>  
+        <a class="dropdown-item" href="{{ URL::to('/sector/create') }}" >
+          Agregar un sector
+      </a>            
+    </div>
+  </li>
     <li class="nav-item dropdown">
       <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
         Reportes <span class="caret"></span>

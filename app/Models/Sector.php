@@ -12,7 +12,7 @@ class Sector extends Model
     protected $guarded = [  ];
     //
     public function unidadproductiva(  ) {
-        return $this->belongsTo( 'App\Models\UnidadProductiva' );
+        return $this->belongsTo( 'App\Models\UnidadProductiva', 'unidad_productiva_id' );
     }
   
 	public function lote_unidadproductivas(  ) {

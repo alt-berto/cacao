@@ -56,6 +56,8 @@ class Controller extends BaseController
         $this->data['costo'] = [];
         $this->data['unidades_productivas'] = [];
         $this->data['unidad_productiva'] = [];
+        $this->data['sectores'] = [];
+        $this->data['sector'] = [];
     }
 
     // Load Home Index View

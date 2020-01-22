@@ -236,10 +236,8 @@ class CostosController extends Controller
             'updated_at' => $current_timestamp
         ] );            
         //
-     
-       
-                      
-        return redirect(  )->back(  )->with( 'success', 'Se ha modificado el costo correctamente' ); // redirigimos al formulario con el mensaje del usuario ha sido modificado en caso que el usuario se actualice.
+                                  
+        return redirect(  )->back(  )->with( 'success', 'Se ha modificado el costo correctamente' ); 
     }
 
     /**
