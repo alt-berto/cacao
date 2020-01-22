@@ -5,7 +5,7 @@
 
 <br><br>
 <h1>Crear Lote</h1><br>
-<crear-lote-component></crear-lote-component>
+<create-lote-component></create-lote-component>
 <br><br>
 
 @endsection

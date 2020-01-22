@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use App\Models\Lote;
+use App\Models\Lote_UnidadProductiva;
 use Illuminate\Http\Request;
 
 class LoteController extends Controller
@@ -125,6 +126,40 @@ class LoteController extends Controller
     public function store( Request $request )
     {
         //
+        if ( Auth::check(  ) ) {
+            //
+            $current_timestamp = date('Y-m-d H:i:s');
+            $in_lote = Lote::create( [
+                'consecutive' => $request->consecutive,
+                'name' => $request->name,
+                'date' => $request->date,
+                'status' => $request->status,
+                'note' => $request->note,
+                'isactive' => true,
+                'created_at' => $current_timestamp
+            ] );
+            if ( $in_lote ) {
+                //
+                foreach( $request->unidades_productivas as $value ) {
+                    
+                    $in_sectores = Lote_UnidadProductiva::create( [
+                        'lote_id' => $in_lote->id,
+                        'sector_id' => $value['sector_id'],
+                        'measure' => $value['measure'],
+                        'amount' => $value['amount'],
+                        'note' => $value['note'],
+                    ] );
+                    if ( !$in_sectores ) {
+                        break;
+                    return 'error';
+                    }
+                }                                
+                return 'done';
+            } else {
+                return 'error';
+            }
+            
+        }
     }
 
     /**

@@ -1923,10 +1923,10 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CreateLoteComponent.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/CreateLoteComponent.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1948,11 +1948,282 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {
-    console.log('Component mounted.');
+  data: function data() {
+    return {
+      base_url: window.location.protocol + "//" + window.location.host + "/",
+      lote_unidad_productiva: [{
+        unidad_productiva: [],
+        sectores: [],
+        sector_error: false,
+        sector_id: '',
+        measure: 'Kg',
+        amount: 0,
+        amount_error: false,
+        note: '',
+        isactive: true
+      }],
+      sector_error: false,
+      next_consecutive: 0,
+      unidad_productiva: [],
+      consecutive_error: false,
+      consecutive: 0,
+      name: '',
+      date: new Date().toISOString().slice(0, 10),
+      date_error: false,
+      note: '',
+      status: '',
+      success: '',
+      endpoint: '/lotes',
+      endpoint_sector: '/lotes/unidad_productiva',
+      endpoint_unidad: '/unidad/productiva/active'
+    };
+  },
+  created: function created() {
+    this.fetchUnidadProductiva();
+  },
+  methods: {
+    create: function create() {
+      var self = this;
+      self.sector_error = false;
+      self.consecutive_error = false;
+      self.date_error = false;
+      Object.keys(self.lote_unidad_productiva).forEach(function (key) {
+        if (self.lote_unidad_productiva[key].sector_id == '0' || self.lote_unidad_productiva[key].sector_id == '') {
+          self.lote_unidad_productiva[key].sector_error = true;
+          self.sector_error = true;
+        }
+
+        if (self.lote_unidad_productiva[key].amount == 0) {
+          self.lote_unidad_productiva[key].amount_error = true;
+          self.sector_error = true;
+        }
+      });
+
+      if (self.consecutive <= 0) {
+        self.consecutive_error = true;
+      }
+
+      if (self.date == '') {
+        self.date_error = true;
+      }
+
+      if (self.sector_error == false && self.consecutive_error == false && self.date_error == false) {
+        //
+        axios({
+          method: 'POST',
+          url: self.endpoint,
+          data: {
+            unidades_productivas: self.lote_unidad_productiva,
+            consecutive: self.consecutive,
+            name: self.name,
+            date: self.date,
+            note: self.note,
+            status: self.status
+          },
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        }).then(function (response) {
+          //
+          self.success = 'done';
+          self.lote_unidad_productiva = [{
+            unidad_productiva: self.unidad_productiva,
+            sectores: [],
+            sector_error: false,
+            sector_id: '',
+            measure: 'Kg',
+            amount: 0,
+            amount_error: false,
+            note: '',
+            isactive: true
+          }];
+          self.sector_error = false;
+          self.next_consecutive += 1;
+          self.consecutive_error = false;
+          self.consecutive += 1;
+          self.name = '';
+          self.date = new Date().toISOString().slice(0, 10);
+          self.date_error = false;
+          self.note = '';
+          self.status = ''; //
+        })["catch"](function (error) {
+          self.success = 'error';
+          console.log(error);
+        });
+      }
+    },
+    onChange: function onChange(event, index) {
+      var self = this;
+      self.lote_unidad_productiva[index].sectores = [];
+      self.lote_unidad_productiva[index].sector_selected = ''; //
+
+      Object.keys(self.unidad_productiva).forEach(function (key) {
+        if (event.target.value == self.unidad_productiva[key].id) {
+          Object.keys(self.unidad_productiva[key].sectores).forEach(function (key_2) {
+            self.lote_unidad_productiva[index].sectores.push({
+              id: self.unidad_productiva[key].sectores[key_2].id,
+              name: self.unidad_productiva[key].sectores[key_2].name
+            });
+          });
+        }
+      });
+    },
+    fetchUnidadProductiva: function fetchUnidadProductiva() {
+      var _this = this;
+
+      //
+      axios.get(this.endpoint_unidad).then(function (response) {
+        _this.unidad_productiva = response.data;
+        _this.lote_unidad_productiva[0].unidad_productiva = _this.unidad_productiva;
+        console.log(_this.lote_unidad_productiva[0].unidad_productiva);
+      });
+    },
+    add: function add(index) {
+      var self = this;
+      var size = Object.keys(self.unidad_productiva).length - 1;
+
+      if (size > index) {
+        this.lote_unidad_productiva.push({
+          unidad_productiva: self.unidad_productiva,
+          sectores: [],
+          sector_error: false,
+          sector_id: '',
+          measure: 'Kg',
+          amount: 0,
+          amount_error: false,
+          note: '',
+          isactive: true
+        });
+      }
+    },
+    remove: function remove(index) {
+      this.lote_unidad_productiva.splice(index, 1);
+    }
   }
 });
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EditLoteComponent.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/EditLoteComponent.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ListLotesComponent.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ListLotesComponent.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
 
@@ -37311,10 +37582,10 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&":
-/*!*******************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e& ***!
-  \*******************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CreateLoteComponent.vue?vue&type=template&id=d6feb01c&":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/CreateLoteComponent.vue?vue&type=template&id=d6feb01c& ***!
+  \**********************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -37326,32 +37597,713 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-body" }, [
+      _c(
+        "div",
+        {},
+        [
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "label",
+              { staticClass: "text-uppercase", attrs: { for: "consecutive" } },
+              [_vm._v("Consecutivo: ")]
+            ),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.consecutive,
+                  expression: "consecutive"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                value: "",
+                type: "number",
+                name: "consecutive",
+                id: "consecutive",
+                required: "",
+                autocomplete: "consecutive",
+                autofocus: ""
+              },
+              domProps: { value: _vm.consecutive },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.consecutive = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.consecutive_error
+              ? _c("p", { staticClass: "text-danger mt-2" }, [
+                  _c("small", [
+                    _vm._v(
+                      "*Escriba un consecutivo, el siguiente consecutivo es: " +
+                        _vm._s(_vm.next_consecutive) +
+                        "."
+                    )
+                  ])
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "label",
+              { staticClass: "text-uppercase", attrs: { for: "name" } },
+              [_vm._v("Nombre: ")]
+            ),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.name,
+                  expression: "name"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                value: "",
+                type: "text",
+                name: "name",
+                id: "name",
+                autocomplete: "name",
+                autofocus: ""
+              },
+              domProps: { value: _vm.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.name = $event.target.value
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "label",
+              { staticClass: "text-uppercase", attrs: { for: "date" } },
+              [_vm._v("Fecha: ")]
+            ),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.date,
+                  expression: "date"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "date",
+                name: "date",
+                id: "date",
+                required: "",
+                autocomplete: "date",
+                autofocus: ""
+              },
+              domProps: { value: _vm.date },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.date = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.date_error
+              ? _c("p", { staticClass: "text-danger mt-2" }, [
+                  _c("small", [
+                    _vm._v(
+                      "*Asigne una fecha com formato correcto ex: dd/mm/aaaa!."
+                    )
+                  ])
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "label",
+              { staticClass: "text-uppercase", attrs: { for: "note" } },
+              [_vm._v("Observaciones: ")]
+            ),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.note,
+                  expression: "note"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                value: "",
+                type: "text",
+                name: "note",
+                id: "note",
+                autocomplete: "note",
+                autofocus: ""
+              },
+              domProps: { value: _vm.note },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.note = $event.target.value
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "label",
+              { staticClass: "text-uppercase", attrs: { for: "status" } },
+              [_vm._v("Estado: ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.status,
+                    expression: "status"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { name: "status", id: "status" },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.status = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
+                }
+              },
+              [
+                _c("option", { attrs: { value: "process", selected: "" } }, [
+                  _vm._v(" En proceso ")
+                ]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "finished" } }, [
+                  _vm._v(" Procesado ")
+                ]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "defective" } }, [
+                  _vm._v(" Defectuoso ")
+                ])
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c("h1", [_vm._v(" Origen ")]),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _vm._l(_vm.lote_unidad_productiva, function(input, index) {
+            return _c(
+              "div",
+              { key: index },
+              [
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "text-uppercase",
+                      attrs: { for: "unidad_productiva" }
+                    },
+                    [_vm._v("Unidad Productiva #" + _vm._s(index + 1) + ": ")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      staticClass: "form-control",
+                      attrs: {
+                        name: "unidad_productiva",
+                        id: "unidad_productiva",
+                        required: "",
+                        autofocus: ""
+                      },
+                      on: {
+                        change: function($event) {
+                          return _vm.onChange($event, index)
+                        }
+                      }
+                    },
+                    [
+                      _vm._l(input.unidad_productiva, function(unidad, index) {
+                        return _c(
+                          "option",
+                          { key: index, domProps: { value: unidad.id } },
+                          [_vm._v(" " + _vm._s(unidad.name) + " ")]
+                        )
+                      }),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "", selected: "" } }, [
+                        _vm._v(" Seleccione una unidad productiva")
+                      ])
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "text-uppercase",
+                      attrs: { for: "sector_id" }
+                    },
+                    [_vm._v("Sector #" + _vm._s(index + 1) + ": ")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: input.sector_id,
+                          expression: "input.sector_id"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        name: "sector_id",
+                        id: "sector_id",
+                        required: "",
+                        autofocus: ""
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            input,
+                            "sector_id",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _vm._l(input.sectores, function(sector, index) {
+                        return _c(
+                          "option",
+                          { key: index, domProps: { value: sector.id } },
+                          [_vm._v(" " + _vm._s(sector.name) + " ")]
+                        )
+                      }),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "", selected: "" } }, [
+                        _vm._v(" Seleccione un sector")
+                      ])
+                    ],
+                    2
+                  ),
+                  _vm._v(" "),
+                  input.sector_error
+                    ? _c("p", { staticClass: "text-danger mt-2" }, [
+                        _c("small", [
+                          _vm._v(
+                            "*Seleccione un sector!, Si no le aparecen sectores abajo esta el boton para ir al formulario para crear sector, agrege los sectores a la unidad productiva."
+                          )
+                        ])
+                      ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "text-uppercase",
+                      attrs: { for: "measure" }
+                    },
+                    [_vm._v("Unidad de Medida #" + _vm._s(index + 1) + ": ")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: input.measure,
+                          expression: "input.measure"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "measure", id: "measure" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            input,
+                            "measure",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c(
+                        "option",
+                        {
+                          attrs: { selected: "" },
+                          domProps: { value: input.measure }
+                        },
+                        [_vm._v(" " + _vm._s(input.measure) + " ")]
+                      )
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    { staticClass: "text-uppercase", attrs: { for: "amount" } },
+                    [_vm._v("Cantidad (Peso) #" + _vm._s(index + 1) + ": ")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: input.amount,
+                        expression: "input.amount"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      value: "",
+                      type: "number",
+                      name: "amount",
+                      id: "amount",
+                      required: "",
+                      autocomplete: "amount",
+                      autofocus: ""
+                    },
+                    domProps: { value: input.amount },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(input, "amount", $event.target.value)
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  input.amount_error
+                    ? _c("p", { staticClass: "text-danger mt-2" }, [
+                        _c("small", [
+                          _vm._v("*La cantidad tiene que ser mayor a 0.")
+                        ])
+                      ])
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "text-uppercase",
+                      attrs: { for: "input_note" }
+                    },
+                    [_vm._v("Observaciones #" + _vm._s(index + 1) + ": ")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: input.note,
+                        expression: "input.note"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      value: "",
+                      type: "text",
+                      name: "input_note",
+                      id: "input_note",
+                      autocomplete: "input_note",
+                      autofocus: ""
+                    },
+                    domProps: { value: input.note },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(input, "note", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                input.sectores.length == 0
+                  ? [
+                      _c("br"),
+                      _vm._v(" "),
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-info",
+                          attrs: { href: _vm.base_url + "sector/create" }
+                        },
+                        [_vm._v("Crear Sectores")]
+                      )
+                    ]
+                  : _vm._e(),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value:
+                          index ||
+                          (!index && _vm.lote_unidad_productiva.length > 1),
+                        expression:
+                          "index || ( !index && lote_unidad_productiva.length > 1 )"
+                      }
+                    ],
+                    staticClass: "btn btn-danger",
+                    on: {
+                      click: function($event) {
+                        return _vm.remove(index)
+                      }
+                    }
+                  },
+                  [_vm._v(" Remover Sector ")]
+                ),
+                _vm._v(" "),
+                input.sector_id != "0" && input.amount > 0
+                  ? _c(
+                      "button",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value:
+                              index == _vm.lote_unidad_productiva.length - 1,
+                            expression:
+                              "index == lote_unidad_productiva.length-1"
+                          }
+                        ],
+                        staticClass: "btn btn-warning",
+                        on: {
+                          click: function($event) {
+                            return _vm.add(index)
+                          }
+                        }
+                      },
+                      [_vm._v(" Agregar sector ")]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("hr")
+              ],
+              2
+            )
+          }),
+          _vm._v(" "),
+          _vm.sector_error
+            ? _c("p", { staticClass: "text-danger mt-2" }, [
+                _c("small", [_vm._v("*Revise la informacion de los origenes.")])
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.success == "done"
+            ? [_c("br"), _vm._v(" "), _vm._m(0), _vm._v(" "), _c("br")]
+            : _vm.success == "error"
+            ? [_c("br"), _vm._v(" "), _vm._m(1), _vm._v(" "), _c("br")]
+            : _vm._e(),
+          _vm._v(" "),
+          _c("br"),
+          _c("br"),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary",
+              attrs: { type: "submit" },
+              on: { click: _vm.create }
+            },
+            [_vm._v("Crear Lote")]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-dark",
+              attrs: { href: _vm.base_url + "/lotes" }
+            },
+            [_vm._v("Volver")]
+          )
+        ],
+        2
+      )
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Example Component")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an example component.\n                "
-              )
-            ])
-          ])
-        ])
-      ])
-    ])
+    return _c(
+      "div",
+      {
+        staticClass: "alert alert-success alert-block",
+        staticStyle: { "margin-left": "25%", "margin-right": "25%" }
+      },
+      [
+        _c(
+          "button",
+          {
+            staticClass: "close",
+            attrs: { type: "button", "data-dismiss": "alert" }
+          },
+          [_vm._v("×")]
+        ),
+        _vm._v(" "),
+        _c("strong", [_vm._v(" Se ha creado el lote!. ")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "alert alert-danger alert-block",
+        staticStyle: { "margin-left": "25%", "margin-right": "25%" }
+      },
+      [
+        _c(
+          "button",
+          {
+            staticClass: "close",
+            attrs: { type: "button", "data-dismiss": "alert" }
+          },
+          [_vm._v("×")]
+        ),
+        _vm._v(" "),
+        _c("strong", [_vm._v(" Ha ocurrido un error, favor intente luego!.")])
+      ]
+    )
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EditLoteComponent.vue?vue&type=template&id=23fd7038&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/EditLoteComponent.vue?vue&type=template&id=23fd7038& ***!
+  \********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div")
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ListLotesComponent.vue?vue&type=template&id=787c4032&":
+/*!*********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ListLotesComponent.vue?vue&type=template&id=787c4032& ***!
+  \*********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div")
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -49540,7 +50492,9 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
+Vue.component('list-lotes-component', __webpack_require__(/*! ./components/ListLotesComponent.vue */ "./resources/js/components/ListLotesComponent.vue")["default"]);
+Vue.component('edit-lote-component', __webpack_require__(/*! ./components/EditLoteComponent.vue */ "./resources/js/components/EditLoteComponent.vue")["default"]);
+Vue.component('create-lote-component', __webpack_require__(/*! ./components/CreateLoteComponent.vue */ "./resources/js/components/CreateLoteComponent.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -49598,17 +50552,17 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
-/***/ "./resources/js/components/ExampleComponent.vue":
-/*!******************************************************!*\
-  !*** ./resources/js/components/ExampleComponent.vue ***!
-  \******************************************************/
+/***/ "./resources/js/components/CreateLoteComponent.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/CreateLoteComponent.vue ***!
+  \*********************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ExampleComponent.vue?vue&type=template&id=299e239e& */ "./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&");
-/* harmony import */ var _ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ExampleComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&");
+/* harmony import */ var _CreateLoteComponent_vue_vue_type_template_id_d6feb01c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateLoteComponent.vue?vue&type=template&id=d6feb01c& */ "./resources/js/components/CreateLoteComponent.vue?vue&type=template&id=d6feb01c&");
+/* harmony import */ var _CreateLoteComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CreateLoteComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/CreateLoteComponent.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -49618,9 +50572,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _CreateLoteComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CreateLoteComponent_vue_vue_type_template_id_d6feb01c___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CreateLoteComponent_vue_vue_type_template_id_d6feb01c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -49630,38 +50584,176 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/ExampleComponent.vue"
+component.options.__file = "resources/js/components/CreateLoteComponent.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&":
-/*!*******************************************************************************!*\
-  !*** ./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js& ***!
-  \*******************************************************************************/
+/***/ "./resources/js/components/CreateLoteComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/CreateLoteComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ExampleComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateLoteComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./CreateLoteComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CreateLoteComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateLoteComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&":
-/*!*************************************************************************************!*\
-  !*** ./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e& ***!
-  \*************************************************************************************/
+/***/ "./resources/js/components/CreateLoteComponent.vue?vue&type=template&id=d6feb01c&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/CreateLoteComponent.vue?vue&type=template&id=d6feb01c& ***!
+  \****************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ExampleComponent.vue?vue&type=template&id=299e239e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateLoteComponent_vue_vue_type_template_id_d6feb01c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./CreateLoteComponent.vue?vue&type=template&id=d6feb01c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CreateLoteComponent.vue?vue&type=template&id=d6feb01c&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateLoteComponent_vue_vue_type_template_id_d6feb01c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateLoteComponent_vue_vue_type_template_id_d6feb01c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/EditLoteComponent.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/EditLoteComponent.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _EditLoteComponent_vue_vue_type_template_id_23fd7038___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EditLoteComponent.vue?vue&type=template&id=23fd7038& */ "./resources/js/components/EditLoteComponent.vue?vue&type=template&id=23fd7038&");
+/* harmony import */ var _EditLoteComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EditLoteComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/EditLoteComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _EditLoteComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _EditLoteComponent_vue_vue_type_template_id_23fd7038___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _EditLoteComponent_vue_vue_type_template_id_23fd7038___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/EditLoteComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/EditLoteComponent.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/EditLoteComponent.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EditLoteComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./EditLoteComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EditLoteComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EditLoteComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/EditLoteComponent.vue?vue&type=template&id=23fd7038&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/EditLoteComponent.vue?vue&type=template&id=23fd7038& ***!
+  \**************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EditLoteComponent_vue_vue_type_template_id_23fd7038___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./EditLoteComponent.vue?vue&type=template&id=23fd7038& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EditLoteComponent.vue?vue&type=template&id=23fd7038&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EditLoteComponent_vue_vue_type_template_id_23fd7038___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EditLoteComponent_vue_vue_type_template_id_23fd7038___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ListLotesComponent.vue":
+/*!********************************************************!*\
+  !*** ./resources/js/components/ListLotesComponent.vue ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ListLotesComponent_vue_vue_type_template_id_787c4032___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ListLotesComponent.vue?vue&type=template&id=787c4032& */ "./resources/js/components/ListLotesComponent.vue?vue&type=template&id=787c4032&");
+/* harmony import */ var _ListLotesComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ListLotesComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/ListLotesComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ListLotesComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ListLotesComponent_vue_vue_type_template_id_787c4032___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ListLotesComponent_vue_vue_type_template_id_787c4032___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ListLotesComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ListLotesComponent.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/ListLotesComponent.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ListLotesComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ListLotesComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ListLotesComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ListLotesComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ListLotesComponent.vue?vue&type=template&id=787c4032&":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/components/ListLotesComponent.vue?vue&type=template&id=787c4032& ***!
+  \***************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ListLotesComponent_vue_vue_type_template_id_787c4032___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ListLotesComponent.vue?vue&type=template&id=787c4032& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ListLotesComponent.vue?vue&type=template&id=787c4032&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ListLotesComponent_vue_vue_type_template_id_787c4032___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ListLotesComponent_vue_vue_type_template_id_787c4032___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

@@ -15,6 +15,7 @@
 Auth::routes(  );
 
 Route::resource('unidades/productivas','UnidadProductivaController');
+Route::get('unidad/productiva/active','UnidadProductivaController@active');
 Route::get('unidad/productiva/create','UnidadProductivaController@create');
 Route::get('unidad/productiva/edit/{id}','UnidadProductivaController@edit');
 
@@ -24,6 +25,7 @@ Route::get('costo/edit/{id}','CostosController@edit');
 
 
 Route::resource('sectores','SectorController');
+Route::get('sector/active','SectorController@active');
 Route::get('sector/create','SectorController@create');
 Route::get('sector/edit/{id}','SectorController@edit');
 

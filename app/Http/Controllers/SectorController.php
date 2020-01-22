@@ -65,6 +65,15 @@ class SectorController extends Controller
         return abort( 404 );
     }
 
+    public function active( Request $request ) {
+        //
+        $sectores = Sector::where( 'isdeleted', false )->with( 'unidadproductiva' )->orderBy('unidad_productiva_id', 'asc')->get(  );
+        
+        if ( $request->wantsJson(  ) ) {
+            return $sectores->toJson(  );
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *

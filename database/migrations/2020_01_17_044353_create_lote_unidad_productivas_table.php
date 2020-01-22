@@ -17,6 +17,8 @@ class CreateLoteUnidadProductivasTable extends Migration
             $table->bigIncrements( 'id' );
             $table->bigInteger( 'lote_id' )->unsigned(  )->index(  );
             $table->bigInteger( 'sector_id' )->unsigned(  )->index(  );
+            $table->enum( 'measure', [ 'Kg' ] )->nullable( $value = false )->default( 'Kg' );
+            $table->double( 'amount', 8, 2 );
             $table->string( 'note' )->nullable(  );
             $table->boolean( 'isactive' )->nullable( $value = false )->default( true );
             $table->boolean( 'isdeleted' )->nullable( $value = false )->default( false );

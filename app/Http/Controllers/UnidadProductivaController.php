@@ -64,6 +64,15 @@ class UnidadProductivaController extends Controller
         return abort( 404 );
     }
 
+    public function active( Request $request ) {
+        //
+        $unidades_productivas = UnidadProductiva::where( 'isdeleted', false )->with( 'sectores' )->orderBy('name', 'asc')->get(  );
+        
+        if ( $request->wantsJson(  ) ) {
+            return $unidades_productivas->toJson(  );
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *
