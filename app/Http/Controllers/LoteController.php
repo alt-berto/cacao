@@ -63,6 +63,15 @@ class LoteController extends Controller
         return abort( 404 );
     }
 
+    public function active( Request $request ) {
+        //
+        $lotes = Lote::where( 'isdeleted', false )->with( 'lote_unidadproductivas.sector.unidadproductiva' )->orderBy('consecutive', 'desc')->get(  );
+        
+        if ( $request->wantsJson(  ) ) {
+            return $lotes->toJson(  );
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -255,6 +264,6 @@ class LoteController extends Controller
         $lote = Lote::find( $id );
         $name = $lote->consecutive;
         $lote->update( [ 'isdeleted' => true ] );
-        return redirect(  )->back(  )->with( 'success', 'Se ha eliminado correctamente el lote: '.$name ); 
+        return 'done';
     }
 }

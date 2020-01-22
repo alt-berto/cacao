@@ -34,6 +34,7 @@ Route::get('lote/unidad_productiva/create','LoteUnidadProductivaController@creat
 Route::get('lote/unidad_productiva/edit/{id}','LoteUnidadProductivaController@edit');
 
 Route::resource('lotes','LoteController');
+Route::get('lote/active','LoteController@active');
 Route::get('lote/create','LoteController@create');
 Route::get('lote/edit/{id}','LoteController@edit');
 

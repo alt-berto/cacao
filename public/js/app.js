@@ -2207,7 +2207,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      base_url: window.location.protocol + "//" + window.location.host + "/",
+      lotes: [],
+      endpoint: '/lotes'
+    };
+  },
+  created: function created() {
+    this.fetchLotes();
+  },
+  methods: {
+    fetchLotes: function fetchLotes() {
+      var _this = this;
+
+      //
+      axios.get(this.endpoint).then(function (response) {
+        _this.lotes = response.data;
+        console.log(_this.lotes);
+      });
+    }
+  }
+});
 
 /***/ }),
 
@@ -2223,7 +2245,180 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      base_url: window.location.protocol + "//" + window.location.host + "/",
+      lotes: [],
+      endpoint: '/lote/active'
+    };
+  },
+  created: function created() {
+    this.fetchLotes();
+  },
+  methods: {
+    fetchLotes: function fetchLotes() {
+      var _this = this;
+
+      //
+      axios.get(this.endpoint).then(function (response) {
+        _this.lotes = response.data;
+        console.log(_this.lotes);
+      });
+    },
+    destroy: function destroy(id) {
+      var _this2 = this;
+
+      axios({
+        method: 'DELETE',
+        url: '/lotes/' + id,
+        data: {
+          id: id
+        },
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }).then(function (response) {
+        if (response.data == 'done') {
+          _this2.fetchLotes();
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    get_total: function get_total(details) {
+      var self = this;
+      var total = 0;
+      var measure = "";
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = details[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var detail = _step.value;
+          measure = detail.measure;
+          total += detail.amount;
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return total + ' ' + measure;
+    }
+  }
+});
 
 /***/ }),
 
@@ -38301,9 +38496,355 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-body" }, [
+      _c("table", { staticClass: "table table-striped" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.lotes, function(lote, index) {
+            return _c("tr", { key: index }, [
+              _c("td", [_vm._v(_vm._s(lote.id))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(lote.consecutive))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(lote.name))]),
+              _vm._v(" "),
+              _c("td", [
+                _vm._v(
+                  " " + _vm._s(_vm.get_total(lote.lote_unidadproductivas)) + " "
+                )
+              ]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(lote.date))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(lote.note))]),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  lote.status == "process"
+                    ? [
+                        _vm._v(
+                          "\n                        En Proceso\n                    "
+                        )
+                      ]
+                    : lote.status == "finished"
+                    ? [
+                        _vm._v(
+                          "\n                        Procesado\n                    "
+                        )
+                      ]
+                    : [
+                        _vm._v(
+                          "\n                        Defectuoso\n                    "
+                        )
+                      ]
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(lote.created_at))]),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(lote.updated_at))]),
+              _vm._v(" "),
+              _c("td", [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-info",
+                    attrs: {
+                      href: "#",
+                      "data-toggle": "modal",
+                      "data-target": "#modal_id_" + lote.id
+                    }
+                  },
+                  [_vm._v("Ver Detalle")]
+                )
+              ]),
+              _vm._v(" "),
+              _vm._m(1, true),
+              _vm._v(" "),
+              _c("td", [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-danger",
+                    on: {
+                      click: function($event) {
+                        return _vm.destroy(lote.id)
+                      }
+                    }
+                  },
+                  [_vm._v("Eliminar")]
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "modal fade",
+                  attrs: {
+                    id: "modal_id_" + lote.id,
+                    tabindex: "-1",
+                    role: "dialog",
+                    "aria-labelledby": "modal_id_" + lote.id + "Label",
+                    "aria-hidden": "true"
+                  }
+                },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "modal-dialog",
+                      attrs: { role: "document" }
+                    },
+                    [
+                      _c("div", { staticClass: "modal-content" }, [
+                        _c("div", { staticClass: "modal-header" }, [
+                          _c(
+                            "h5",
+                            {
+                              staticClass: "modal-title",
+                              attrs: { id: "modal_id_" + lote.id + "Label" }
+                            },
+                            [
+                              _vm._v(
+                                "Detalle del Lote: " + _vm._s(lote.consecutive)
+                              )
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _vm._m(2, true)
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "modal-body" }, [
+                          _c("ul", { staticClass: "list-group" }, [
+                            _c("li", { staticClass: "list-group-item" }, [
+                              _c("b", [_vm._v(" Consecutivo: ")]),
+                              _vm._v(" " + _vm._s(lote.consecutive) + " ")
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "list-group-item" }, [
+                              _c("b", [_vm._v(" Nombre: ")]),
+                              _vm._v(" " + _vm._s(lote.name) + " ")
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "list-group-item" }, [
+                              _c("b", [_vm._v(" Fecha: ")]),
+                              _vm._v(" " + _vm._s(lote.date) + " ")
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "list-group-item" }, [
+                              _c("b", [_vm._v(" Cantidad: ")]),
+                              _vm._v(
+                                " " +
+                                  _vm._s(
+                                    _vm.get_total(lote.lote_unidadproductivas)
+                                  ) +
+                                  " "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "list-group-item" }, [
+                              _c("b", [_vm._v(" Obsservaciones: ")]),
+                              _vm._v(" " + _vm._s(lote.note) + " ")
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "li",
+                              { staticClass: "list-group-item" },
+                              [
+                                _c("b", [_vm._v(" Estado: ")]),
+                                _vm._v(" "),
+                                lote.status == "process"
+                                  ? [
+                                      _vm._v(
+                                        "\n                                            En Proceso\n                                        "
+                                      )
+                                    ]
+                                  : lote.status == "finished"
+                                  ? [
+                                      _vm._v(
+                                        "\n                                            Procesado\n                                        "
+                                      )
+                                    ]
+                                  : [
+                                      _vm._v(
+                                        "\n                                            Defectuoso\n                                        "
+                                      )
+                                    ]
+                              ],
+                              2
+                            ),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "list-group-item" }, [
+                              _c("b", [_vm._v(" Creado: ")]),
+                              _vm._v(" " + _vm._s(lote.created_at) + " ")
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "list-group-item" }, [
+                              _c("b", [_vm._v(" Modificado: ")]),
+                              _vm._v(" " + _vm._s(lote.updated_at) + " ")
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "list-group-item" }, [
+                              _c("b", [_vm._v(" Unidades Productivas: ")]),
+                              _c("br"),
+                              _c("br"),
+                              _vm._v(" "),
+                              _c(
+                                "ul",
+                                { staticClass: "list-group" },
+                                _vm._l(lote.lote_unidadproductivas, function(
+                                  unidad_productiva,
+                                  index
+                                ) {
+                                  return _c(
+                                    "li",
+                                    {
+                                      key: index,
+                                      staticClass: "list-group-item"
+                                    },
+                                    [
+                                      _c("b", [_vm._v(" Unidad Productiva: ")]),
+                                      _vm._v(
+                                        " " +
+                                          _vm._s(
+                                            unidad_productiva.sector
+                                              .unidadproductiva.name
+                                          ) +
+                                          " "
+                                      ),
+                                      _c("br"),
+                                      _vm._v(" "),
+                                      _c("b", [_vm._v(" Sector: ")]),
+                                      _vm._v(
+                                        " " +
+                                          _vm._s(
+                                            unidad_productiva.sector.name
+                                          ) +
+                                          " "
+                                      ),
+                                      _c("br"),
+                                      _vm._v(" "),
+                                      _c("b", [_vm._v(" Cantidad: ")]),
+                                      _vm._v(
+                                        " " +
+                                          _vm._s(
+                                            unidad_productiva.amount +
+                                              " " +
+                                              unidad_productiva.measure
+                                          ) +
+                                          " "
+                                      ),
+                                      _c("br"),
+                                      _vm._v(" "),
+                                      _c("b", [_vm._v(" Observaciones: ")]),
+                                      _vm._v(
+                                        " " +
+                                          _vm._s(unidad_productiva.note) +
+                                          " "
+                                      ),
+                                      _c("br"),
+                                      _vm._v(" "),
+                                      _c("hr")
+                                    ]
+                                  )
+                                }),
+                                0
+                              )
+                            ])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _vm._m(3, true)
+                      ])
+                    ]
+                  )
+                ]
+              )
+            ])
+          }),
+          0
+        )
+      ])
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("ID")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Consecutivo")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Nombre")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Fecha")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Cantidad")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Obervaciones")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Estado")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Creado")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Modificado")]),
+        _vm._v(" "),
+        _c("th", { attrs: { colspan: "3" } }, [_vm._v("Action")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [
+      _c("a", { staticClass: "btn btn-warning", attrs: { href: "#" } }, [
+        _vm._v("Editar")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Close")]
+      )
+    ])
+  }
+]
 render._withStripped = true
 
 
