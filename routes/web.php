@@ -27,11 +27,13 @@ Route::resource('sectores','SectorController');
 Route::get('sector/create','SectorController@create');
 Route::get('sector/edit/{id}','SectorController@edit');
 
-Route::resource('lote/unidad_productiva','LoteUnidadProductivaController');
-
+Route::resource('lotes/unidad_productiva','LoteUnidadProductivaController');
+Route::get('lote/unidad_productiva/create','LoteUnidadProductivaController@create');
+Route::get('lote/unidad_productiva/edit/{id}','LoteUnidadProductivaController@edit');
 
 Route::resource('lotes','LoteController');
-
+Route::get('lote/create','LoteController@create');
+Route::get('lote/edit/{id}','LoteController@edit');
 
 
 Route::get( '/', 'Controller@home' )->name( 'home' );

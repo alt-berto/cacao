@@ -51,7 +51,7 @@ class Controller extends BaseController
             'internals'  => array(  ),
             'externals'  => array(  )
         );
-
+        $this->data['id'] = '';
         $this->data['costos'] = [];
         $this->data['costo'] = [];
         $this->data['unidades_productivas'] = [];
