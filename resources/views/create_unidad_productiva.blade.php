@@ -25,7 +25,7 @@
         <form method="POST" action="{{ URL::to('/unidades/productivas/') }}">                
                 @csrf
                 <div class="form-group">
-                    <label class="text-uppercase" for="name" >Nombre: </label>
+                    <label class="text-uppercase" for="name" >Nombre*: </label>
                     <input class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" type="text" name="name" id="name" required autocomplete="name" autofocus>                    
                     @error('name')
                         <span class="invalid-feedback" role="alert">
@@ -34,7 +34,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label class="text-uppercase" for="address" >Direccion: </label>
+                    <label class="text-uppercase" for="address" >Direccion*: </label>
                     <input class="form-control @error('address') is-invalid @enderror" value="{{ old('address') }}" type="text" name="address" id="address" required autocomplete="address" autofocus>                    
                     @error('address')
                         <span class="invalid-feedback" role="alert">
@@ -43,8 +43,17 @@
                     @enderror
                 </div>
                 <div class="form-group">
+                    <label class="text-uppercase" for="size" >Hectareas: </label>
+                    <input class="form-control @error('size') is-invalid @enderror" value="{{ old('size') }}" type="number" name="size" id="size" autocomplete="size" autofocus>                    
+                    @error('size')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="form-group">
                     <label class="text-uppercase" for="lat" >Latitud: </label>
-                    <input class="form-control @error('lat') is-invalid @enderror" value="{{ old('lat') }}" type="text" name="lat" id="lat" required autocomplete="lat" autofocus>                    
+                    <input class="form-control @error('lat') is-invalid @enderror" value="{{ old('lat') }}" type="text" name="lat" id="lat" autocomplete="lat" autofocus>                    
                     @error('lat')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -53,7 +62,7 @@
                 </div>
                 <div class="form-group">
                     <label class="text-uppercase" for="long" >Longitud: </label>
-                    <input class="form-control @error('long') is-invalid @enderror" value="{{ old('long') }}" type="text" name="long" id="long" required autocomplete="long" autofocus>                    
+                    <input class="form-control @error('long') is-invalid @enderror" value="{{ old('long') }}" type="text" name="long" id="long" autocomplete="long" autofocus>                    
                     @error('long')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -62,7 +71,7 @@
                 </div>
                 <div class="form-group">
                     <label class="text-uppercase" for="note" >Nota: </label>
-                    <input class="form-control @error('note') is-invalid @enderror" value="{{ old('note') }}" type="text" name="note" id="note" required autocomplete="note" autofocus>                    
+                    <input class="form-control @error('note') is-invalid @enderror" value="{{ old('note') }}" type="text" name="note" id="note" autocomplete="note" autofocus>                    
                     @error('note')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

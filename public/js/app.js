@@ -2037,6 +2037,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2207,26 +2208,262 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['id'],
   data: function data() {
     return {
       base_url: window.location.protocol + "//" + window.location.host + "/",
-      lotes: [],
-      endpoint: '/lotes'
+      lote: [],
+      sector_error: false,
+      next_consecutive: 0,
+      unidad_productiva: [],
+      consecutive_error: false,
+      consecutive: 0,
+      name: '',
+      date: new Date().toISOString().slice(0, 10),
+      date_error: false,
+      note: '',
+      status: '',
+      success: '',
+      endpoint: '/lotes/',
+      endpoint_sector: '/lotes/unidad_productiva',
+      endpoint_unidad: '/unidad/productiva/active'
     };
   },
   created: function created() {
-    this.fetchLotes();
+    this.fetchUnidadProductiva();
+    this.fetchLote();
   },
   methods: {
-    fetchLotes: function fetchLotes() {
+    update: function update() {
+      var self = this;
+      self.sector_error = false;
+      self.consecutive_error = false;
+      self.date_error = false;
+      Object.keys(self.lote.lote_unidadproductivas).forEach(function (key) {
+        if (self.lote.lote_unidadproductivas[key].sector_id == '0' || self.lote.lote_unidadproductivas[key].sector_id == '') {
+          self.sector_error = true;
+        }
+
+        if (self.lote.lote_unidadproductivas[key].amount == 0) {
+          self.sector_error = true;
+        }
+      });
+
+      if (self.lote.consecutive <= 0) {
+        self.consecutive_error = true;
+      }
+
+      if (self.lote.date == '') {
+        self.date_error = true;
+      }
+
+      if (self.sector_error == false && self.consecutive_error == false && self.date_error == false) {
+        //
+        axios({
+          method: 'PUT',
+          url: self.endpoint + self.id,
+          data: {
+            lote: self.lote
+          },
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        }).then(function (response) {
+          //
+          self.success = 'done';
+          self.sector_error = false;
+          self.consecutive_error = false;
+          self.date_error = false; //
+        })["catch"](function (error) {
+          self.success = 'error';
+          console.log(error);
+        });
+      }
+    },
+    onChange: function onChange(event, index) {
+      var self = this;
+      self.lote.lote_unidadproductivas[index].sector.unidadproductiva.sectores = [];
+      self.lote.lote_unidadproductivas[index].sector_id = ''; //
+
+      Object.keys(self.unidad_productiva).forEach(function (key) {
+        if (event.target.value == self.unidad_productiva[key].id) {
+          Object.keys(self.unidad_productiva[key].sectores).forEach(function (key_2) {
+            self.lote.lote_unidadproductivas[index].sector.unidadproductiva.sectores.push({
+              id: self.unidad_productiva[key].sectores[key_2].id,
+              name: self.unidad_productiva[key].sectores[key_2].name
+            });
+          });
+        }
+      });
+    },
+    fetchLote: function fetchLote() {
       var _this = this;
 
       //
-      axios.get(this.endpoint).then(function (response) {
-        _this.lotes = response.data;
-        console.log(_this.lotes);
+      axios.get(this.endpoint + this.id).then(function (response) {
+        _this.lote = response.data;
+        console.log(_this.lote);
       });
+    },
+    fetchUnidadProductiva: function fetchUnidadProductiva() {
+      var _this2 = this;
+
+      //
+      axios.get(this.endpoint_unidad).then(function (response) {
+        _this2.unidad_productiva = response.data; //this.lote_unidad_productiva[ 0 ].unidad_productiva = this.unidad_productiva;
+
+        console.log(_this2.unidad_productiva);
+      });
+    },
+    add: function add(index) {
+      var self = this;
+      var size = Object.keys(self.unidad_productiva).length - 1;
+
+      if (size > index) {
+        this.lote.lote_unidadproductivas.push({
+          unidad_productiva: self.unidad_productiva,
+          sector: {
+            unidad_productiva_id: '',
+            type_id: '',
+            name: '',
+            address: '',
+            size: '',
+            lat: '',
+            "long": '',
+            note: '',
+            isactive: '',
+            isdeleted: '',
+            created_at: '',
+            updated_at: '',
+            unidadproductiva: {
+              name: '',
+              address: null,
+              size: null,
+              lat: null,
+              "long": null,
+              note: '',
+              isactive: 1,
+              isdeleted: 0,
+              created_at: '',
+              updated_at: '',
+              sectores: []
+            }
+          },
+          id: null,
+          lote_id: self.id,
+          sector_id: null,
+          measure: "Kg",
+          amount: 0,
+          note: "",
+          isactive: 1
+        });
+      }
+    },
+    remove: function remove(index) {
+      this.lote.lote_unidadproductivas.splice(index, 1);
     }
   }
 });
@@ -2242,6 +2479,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
 //
 //
 //
@@ -37802,7 +38043,7 @@ var render = function() {
             _c(
               "label",
               { staticClass: "text-uppercase", attrs: { for: "consecutive" } },
-              [_vm._v("Consecutivo: ")]
+              [_vm._v("Consecutivo*: ")]
             ),
             _vm._v(" "),
             _c("input", {
@@ -37852,7 +38093,7 @@ var render = function() {
             _c(
               "label",
               { staticClass: "text-uppercase", attrs: { for: "name" } },
-              [_vm._v("Nombre: ")]
+              [_vm._v("Nombre*: ")]
             ),
             _vm._v(" "),
             _c("input", {
@@ -37870,6 +38111,7 @@ var render = function() {
                 type: "text",
                 name: "name",
                 id: "name",
+                required: "",
                 autocomplete: "name",
                 autofocus: ""
               },
@@ -37889,7 +38131,7 @@ var render = function() {
             _c(
               "label",
               { staticClass: "text-uppercase", attrs: { for: "date" } },
-              [_vm._v("Fecha: ")]
+              [_vm._v("Fecha*: ")]
             ),
             _vm._v(" "),
             _c("input", {
@@ -37973,7 +38215,7 @@ var render = function() {
             _c(
               "label",
               { staticClass: "text-uppercase", attrs: { for: "status" } },
-              [_vm._v("Estado: ")]
+              [_vm._v("Estado*: ")]
             ),
             _vm._v(" "),
             _c(
@@ -38010,6 +38252,10 @@ var render = function() {
                   _vm._v(" En proceso ")
                 ]),
                 _vm._v(" "),
+                _c("option", { attrs: { value: "rojear" } }, [
+                  _vm._v(" Rojear ")
+                ]),
+                _vm._v(" "),
                 _c("option", { attrs: { value: "finished" } }, [
                   _vm._v(" Procesado ")
                 ]),
@@ -38023,7 +38269,7 @@ var render = function() {
           _vm._v(" "),
           _c("br"),
           _vm._v(" "),
-          _c("h1", [_vm._v(" Origen ")]),
+          _c("h1", [_vm._v(" Origenes ")]),
           _vm._v(" "),
           _c("hr"),
           _vm._v(" "),
@@ -38472,9 +38718,686 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-body" }, [
+      _c(
+        "div",
+        {},
+        [
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "label",
+              { staticClass: "text-uppercase", attrs: { for: "consecutive" } },
+              [_vm._v("Consecutivo*: ")]
+            ),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.lote.consecutive,
+                  expression: "lote.consecutive"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                value: "",
+                type: "number",
+                name: "consecutive",
+                id: "consecutive",
+                required: "",
+                autocomplete: "consecutive",
+                autofocus: ""
+              },
+              domProps: { value: _vm.lote.consecutive },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.lote, "consecutive", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.consecutive_error
+              ? _c("p", { staticClass: "text-danger mt-2" }, [
+                  _c("small", [
+                    _vm._v(
+                      "*Escriba un consecutivo, el siguiente consecutivo es: " +
+                        _vm._s(_vm.next_consecutive) +
+                        "."
+                    )
+                  ])
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "label",
+              { staticClass: "text-uppercase", attrs: { for: "name" } },
+              [_vm._v("Nombre*: ")]
+            ),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.lote.name,
+                  expression: "lote.name"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                value: "",
+                type: "text",
+                name: "name",
+                id: "name",
+                required: "",
+                autocomplete: "name",
+                autofocus: ""
+              },
+              domProps: { value: _vm.lote.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.lote, "name", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "label",
+              { staticClass: "text-uppercase", attrs: { for: "date" } },
+              [_vm._v("Fecha*: ")]
+            ),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.lote.date,
+                  expression: "lote.date"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "date",
+                name: "date",
+                id: "date",
+                required: "",
+                autocomplete: "date",
+                autofocus: ""
+              },
+              domProps: { value: _vm.lote.date },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.lote, "date", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.date_error
+              ? _c("p", { staticClass: "text-danger mt-2" }, [
+                  _c("small", [
+                    _vm._v(
+                      "*Asigne una fecha com formato correcto ex: dd/mm/aaaa!."
+                    )
+                  ])
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "label",
+              { staticClass: "text-uppercase", attrs: { for: "note" } },
+              [_vm._v("Observaciones: ")]
+            ),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.lote.note,
+                  expression: "lote.note"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                value: "",
+                type: "text",
+                name: "note",
+                id: "note",
+                autocomplete: "note",
+                autofocus: ""
+              },
+              domProps: { value: _vm.lote.note },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.lote, "note", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "label",
+              { staticClass: "text-uppercase", attrs: { for: "status" } },
+              [_vm._v("Estado*: ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.lote.status,
+                    expression: "lote.status"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { name: "status", id: "status" },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.$set(
+                      _vm.lote,
+                      "status",
+                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                    )
+                  }
+                }
+              },
+              [
+                _c("option", { attrs: { value: "process", selected: "" } }, [
+                  _vm._v(" En proceso ")
+                ]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "rojear" } }, [
+                  _vm._v(" Rojear ")
+                ]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "finished" } }, [
+                  _vm._v(" Procesado ")
+                ]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "defective" } }, [
+                  _vm._v(" Defectuoso ")
+                ])
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c("h1", [_vm._v(" Origenes ")]),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _vm._l(_vm.lote.lote_unidadproductivas, function(input, index) {
+            return _c(
+              "div",
+              { key: index },
+              [
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "text-uppercase",
+                      attrs: { for: "unidad_productiva" }
+                    },
+                    [_vm._v("Unidad Productiva #" + _vm._s(index + 1) + ": ")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: input.sector.unidad_productiva_id,
+                          expression: "input.sector.unidad_productiva_id"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        name: "unidad_productiva",
+                        id: "unidad_productiva",
+                        required: "",
+                        autofocus: ""
+                      },
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              input.sector,
+                              "unidad_productiva_id",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          },
+                          function($event) {
+                            return _vm.onChange($event, index)
+                          }
+                        ]
+                      }
+                    },
+                    [
+                      _vm._l(_vm.unidad_productiva, function(unidad, index) {
+                        return _c(
+                          "option",
+                          { key: index, domProps: { value: unidad.id } },
+                          [_vm._v(" " + _vm._s(unidad.name) + " ")]
+                        )
+                      }),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "", selected: "" } }, [
+                        _vm._v(" Seleccione una unidad productiva")
+                      ])
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "text-uppercase",
+                      attrs: { for: "sector_id" }
+                    },
+                    [_vm._v("Sector #" + _vm._s(index + 1) + ": ")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: input.sector_id,
+                          expression: "input.sector_id"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        name: "sector_id",
+                        id: "sector_id",
+                        required: "",
+                        autofocus: ""
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            input,
+                            "sector_id",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _vm._l(input.sector.unidadproductiva.sectores, function(
+                        sector,
+                        index
+                      ) {
+                        return _c(
+                          "option",
+                          { key: index, domProps: { value: sector.id } },
+                          [_vm._v(" " + _vm._s(sector.name) + " ")]
+                        )
+                      }),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "", selected: "" } }, [
+                        _vm._v(" Seleccione un sector")
+                      ])
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "text-uppercase",
+                      attrs: { for: "measure" }
+                    },
+                    [_vm._v("Unidad de Medida #" + _vm._s(index + 1) + ": ")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: input.measure,
+                          expression: "input.measure"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "measure", id: "measure" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            input,
+                            "measure",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c(
+                        "option",
+                        {
+                          attrs: { selected: "" },
+                          domProps: { value: input.measure }
+                        },
+                        [_vm._v(" " + _vm._s(input.measure) + " ")]
+                      )
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    { staticClass: "text-uppercase", attrs: { for: "amount" } },
+                    [_vm._v("Cantidad (Peso) #" + _vm._s(index + 1) + ": ")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: input.amount,
+                        expression: "input.amount"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      value: "",
+                      type: "number",
+                      name: "amount",
+                      id: "amount",
+                      required: "",
+                      autocomplete: "amount",
+                      autofocus: ""
+                    },
+                    domProps: { value: input.amount },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(input, "amount", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "text-uppercase",
+                      attrs: { for: "input_note" }
+                    },
+                    [_vm._v("Observaciones #" + _vm._s(index + 1) + ": ")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: input.note,
+                        expression: "input.note"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      value: "",
+                      type: "text",
+                      name: "input_note",
+                      id: "input_note",
+                      autocomplete: "input_note",
+                      autofocus: ""
+                    },
+                    domProps: { value: input.note },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(input, "note", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                input.sector.unidadproductiva.sectores.length == 0
+                  ? [
+                      _c("br"),
+                      _vm._v(" "),
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-info",
+                          attrs: { href: _vm.base_url + "sector/create" }
+                        },
+                        [_vm._v("Crear Sectores")]
+                      )
+                    ]
+                  : _vm._e(),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value:
+                          index ||
+                          (!index &&
+                            _vm.lote.lote_unidadproductivas.length > 1),
+                        expression:
+                          "index || ( !index && lote.lote_unidadproductivas.length > 1 )"
+                      }
+                    ],
+                    staticClass: "btn btn-danger",
+                    on: {
+                      click: function($event) {
+                        return _vm.remove(index)
+                      }
+                    }
+                  },
+                  [_vm._v(" Remover Sector ")]
+                ),
+                _vm._v(" "),
+                input.sector_id != "0" && input.amount > 0
+                  ? _c(
+                      "button",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value:
+                              index ==
+                              _vm.lote.lote_unidadproductivas.length - 1,
+                            expression:
+                              "index == lote.lote_unidadproductivas.length-1"
+                          }
+                        ],
+                        staticClass: "btn btn-warning",
+                        on: {
+                          click: function($event) {
+                            return _vm.add(index)
+                          }
+                        }
+                      },
+                      [_vm._v(" Agregar sector ")]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("hr")
+              ],
+              2
+            )
+          }),
+          _vm._v(" "),
+          _vm.sector_error
+            ? _c("p", { staticClass: "text-danger mt-2" }, [
+                _c("small", [_vm._v("*Revise la informacion de los origenes.")])
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.success == "done"
+            ? [_c("br"), _vm._v(" "), _vm._m(0), _vm._v(" "), _c("br")]
+            : _vm.success == "error"
+            ? [_c("br"), _vm._v(" "), _vm._m(1), _vm._v(" "), _c("br")]
+            : _vm._e(),
+          _vm._v(" "),
+          _c("br"),
+          _c("br"),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary",
+              attrs: { type: "submit" },
+              on: { click: _vm.update }
+            },
+            [_vm._v("Actualizar Lote")]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-dark",
+              attrs: { href: _vm.base_url + "/lotes" }
+            },
+            [_vm._v("Volver")]
+          )
+        ],
+        2
+      )
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "alert alert-success alert-block",
+        staticStyle: { "margin-left": "25%", "margin-right": "25%" }
+      },
+      [
+        _c(
+          "button",
+          {
+            staticClass: "close",
+            attrs: { type: "button", "data-dismiss": "alert" }
+          },
+          [_vm._v("×")]
+        ),
+        _vm._v(" "),
+        _c("strong", [_vm._v(" Se ha actualizado el lote!. ")])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "alert alert-danger alert-block",
+        staticStyle: { "margin-left": "25%", "margin-right": "25%" }
+      },
+      [
+        _c(
+          "button",
+          {
+            staticClass: "close",
+            attrs: { type: "button", "data-dismiss": "alert" }
+          },
+          [_vm._v("×")]
+        ),
+        _vm._v(" "),
+        _c("strong", [_vm._v(" Ha ocurrido un error, favor intente luego!.")])
+      ]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -38498,277 +39421,309 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card" }, [
     _c("div", { staticClass: "card-body" }, [
-      _c("table", { staticClass: "table table-striped" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.lotes, function(lote, index) {
-            return _c("tr", { key: index }, [
-              _c("td", [_vm._v(_vm._s(lote.id))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(lote.consecutive))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(lote.name))]),
-              _vm._v(" "),
-              _c("td", [
-                _vm._v(
-                  " " + _vm._s(_vm.get_total(lote.lote_unidadproductivas)) + " "
-                )
-              ]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(lote.date))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(lote.note))]),
-              _vm._v(" "),
-              _c(
-                "td",
-                [
-                  lote.status == "process"
-                    ? [
-                        _vm._v(
-                          "\n                        En Proceso\n                    "
-                        )
-                      ]
-                    : lote.status == "finished"
-                    ? [
-                        _vm._v(
-                          "\n                        Procesado\n                    "
-                        )
-                      ]
-                    : [
-                        _vm._v(
-                          "\n                        Defectuoso\n                    "
-                        )
-                      ]
-                ],
-                2
-              ),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(lote.created_at))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(lote.updated_at))]),
-              _vm._v(" "),
-              _c("td", [
+      _c("div", { staticClass: "table-responsive" }, [
+        _c("table", { staticClass: "table table-hover" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.lotes, function(lote, index) {
+              return _c("tr", { key: index }, [
+                _c("td", [_vm._v(_vm._s(lote.id))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(lote.consecutive))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(lote.name))]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(
+                    " " +
+                      _vm._s(_vm.get_total(lote.lote_unidadproductivas)) +
+                      " "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(lote.date))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(lote.note))]),
+                _vm._v(" "),
                 _c(
-                  "a",
-                  {
-                    staticClass: "btn btn-info",
-                    attrs: {
-                      href: "#",
-                      "data-toggle": "modal",
-                      "data-target": "#modal_id_" + lote.id
-                    }
-                  },
-                  [_vm._v("Ver Detalle")]
-                )
-              ]),
-              _vm._v(" "),
-              _vm._m(1, true),
-              _vm._v(" "),
-              _c("td", [
-                _c(
-                  "a",
-                  {
-                    staticClass: "btn btn-danger",
-                    on: {
-                      click: function($event) {
-                        return _vm.destroy(lote.id)
-                      }
-                    }
-                  },
-                  [_vm._v("Eliminar")]
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "modal fade",
-                  attrs: {
-                    id: "modal_id_" + lote.id,
-                    tabindex: "-1",
-                    role: "dialog",
-                    "aria-labelledby": "modal_id_" + lote.id + "Label",
-                    "aria-hidden": "true"
-                  }
-                },
-                [
+                  "td",
+                  [
+                    lote.status == "process"
+                      ? [
+                          _vm._v(
+                            "\n                        En Proceso\n                    "
+                          )
+                        ]
+                      : lote.status == "finished"
+                      ? [
+                          _vm._v(
+                            "\n                        Procesado\n                    "
+                          )
+                        ]
+                      : [
+                          _vm._v(
+                            "\n                        Defectuoso\n                    "
+                          )
+                        ]
+                  ],
+                  2
+                ),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(lote.created_at))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(lote.updated_at))]),
+                _vm._v(" "),
+                _c("td", [
                   _c(
-                    "div",
+                    "a",
                     {
-                      staticClass: "modal-dialog",
-                      attrs: { role: "document" }
+                      staticClass: "btn btn-info",
+                      attrs: {
+                        href: "#",
+                        "data-toggle": "modal",
+                        "data-target": "#modal_id_" + lote.id
+                      }
                     },
-                    [
-                      _c("div", { staticClass: "modal-content" }, [
-                        _c("div", { staticClass: "modal-header" }, [
-                          _c(
-                            "h5",
-                            {
-                              staticClass: "modal-title",
-                              attrs: { id: "modal_id_" + lote.id + "Label" }
-                            },
-                            [
-                              _vm._v(
-                                "Detalle del Lote: " + _vm._s(lote.consecutive)
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _vm._m(2, true)
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "modal-body" }, [
-                          _c("ul", { staticClass: "list-group" }, [
-                            _c("li", { staticClass: "list-group-item" }, [
-                              _c("b", [_vm._v(" Consecutivo: ")]),
-                              _vm._v(" " + _vm._s(lote.consecutive) + " ")
-                            ]),
-                            _vm._v(" "),
-                            _c("li", { staticClass: "list-group-item" }, [
-                              _c("b", [_vm._v(" Nombre: ")]),
-                              _vm._v(" " + _vm._s(lote.name) + " ")
-                            ]),
-                            _vm._v(" "),
-                            _c("li", { staticClass: "list-group-item" }, [
-                              _c("b", [_vm._v(" Fecha: ")]),
-                              _vm._v(" " + _vm._s(lote.date) + " ")
-                            ]),
-                            _vm._v(" "),
-                            _c("li", { staticClass: "list-group-item" }, [
-                              _c("b", [_vm._v(" Cantidad: ")]),
-                              _vm._v(
-                                " " +
-                                  _vm._s(
-                                    _vm.get_total(lote.lote_unidadproductivas)
-                                  ) +
-                                  " "
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("li", { staticClass: "list-group-item" }, [
-                              _c("b", [_vm._v(" Obsservaciones: ")]),
-                              _vm._v(" " + _vm._s(lote.note) + " ")
-                            ]),
-                            _vm._v(" "),
+                    [_vm._v("Ver Detalle")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "btn btn-warning",
+                      attrs: { href: _vm.base_url + "lote/edit/" + lote.id }
+                    },
+                    [_vm._v("Editar")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "btn btn-danger",
+                      on: {
+                        click: function($event) {
+                          return _vm.destroy(lote.id)
+                        }
+                      }
+                    },
+                    [_vm._v("Eliminar")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "modal fade",
+                    attrs: {
+                      id: "modal_id_" + lote.id,
+                      tabindex: "-1",
+                      role: "dialog",
+                      "aria-labelledby": "modal_id_" + lote.id + "Label",
+                      "aria-hidden": "true"
+                    }
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "modal-dialog",
+                        attrs: { role: "document" }
+                      },
+                      [
+                        _c("div", { staticClass: "modal-content" }, [
+                          _c("div", { staticClass: "modal-header" }, [
                             _c(
-                              "li",
-                              { staticClass: "list-group-item" },
+                              "h5",
+                              {
+                                staticClass: "modal-title",
+                                attrs: { id: "modal_id_" + lote.id + "Label" }
+                              },
                               [
-                                _c("b", [_vm._v(" Estado: ")]),
-                                _vm._v(" "),
-                                lote.status == "process"
-                                  ? [
-                                      _vm._v(
-                                        "\n                                            En Proceso\n                                        "
-                                      )
-                                    ]
-                                  : lote.status == "finished"
-                                  ? [
-                                      _vm._v(
-                                        "\n                                            Procesado\n                                        "
-                                      )
-                                    ]
-                                  : [
-                                      _vm._v(
-                                        "\n                                            Defectuoso\n                                        "
-                                      )
-                                    ]
-                              ],
-                              2
+                                _vm._v(
+                                  "Detalle del Lote: " +
+                                    _vm._s(lote.consecutive)
+                                )
+                              ]
                             ),
                             _vm._v(" "),
-                            _c("li", { staticClass: "list-group-item" }, [
-                              _c("b", [_vm._v(" Creado: ")]),
-                              _vm._v(" " + _vm._s(lote.created_at) + " ")
-                            ]),
-                            _vm._v(" "),
-                            _c("li", { staticClass: "list-group-item" }, [
-                              _c("b", [_vm._v(" Modificado: ")]),
-                              _vm._v(" " + _vm._s(lote.updated_at) + " ")
-                            ]),
-                            _vm._v(" "),
-                            _c("li", { staticClass: "list-group-item" }, [
-                              _c("b", [_vm._v(" Unidades Productivas: ")]),
-                              _c("br"),
-                              _c("br"),
+                            _vm._m(1, true)
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "modal-body" }, [
+                            _c("ul", { staticClass: "list-group" }, [
+                              _c("li", { staticClass: "list-group-item" }, [
+                                _c("b", [_vm._v(" Consecutivo: ")]),
+                                _vm._v(" " + _vm._s(lote.consecutive) + " ")
+                              ]),
+                              _vm._v(" "),
+                              _c("li", { staticClass: "list-group-item" }, [
+                                _c("b", [_vm._v(" Nombre: ")]),
+                                _vm._v(" " + _vm._s(lote.name) + " ")
+                              ]),
+                              _vm._v(" "),
+                              _c("li", { staticClass: "list-group-item" }, [
+                                _c("b", [_vm._v(" Fecha: ")]),
+                                _vm._v(" " + _vm._s(lote.date) + " ")
+                              ]),
+                              _vm._v(" "),
+                              _c("li", { staticClass: "list-group-item" }, [
+                                _c("b", [_vm._v(" Cantidad: ")]),
+                                _vm._v(
+                                  " " +
+                                    _vm._s(
+                                      _vm.get_total(lote.lote_unidadproductivas)
+                                    ) +
+                                    " "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("li", { staticClass: "list-group-item" }, [
+                                _c("b", [_vm._v(" Obsservaciones: ")]),
+                                _vm._v(" " + _vm._s(lote.note) + " ")
+                              ]),
                               _vm._v(" "),
                               _c(
-                                "ul",
-                                { staticClass: "list-group" },
-                                _vm._l(lote.lote_unidadproductivas, function(
-                                  unidad_productiva,
-                                  index
-                                ) {
-                                  return _c(
-                                    "li",
-                                    {
-                                      key: index,
-                                      staticClass: "list-group-item"
-                                    },
-                                    [
-                                      _c("b", [_vm._v(" Unidad Productiva: ")]),
-                                      _vm._v(
-                                        " " +
-                                          _vm._s(
-                                            unidad_productiva.sector
-                                              .unidadproductiva.name
-                                          ) +
-                                          " "
-                                      ),
-                                      _c("br"),
-                                      _vm._v(" "),
-                                      _c("b", [_vm._v(" Sector: ")]),
-                                      _vm._v(
-                                        " " +
-                                          _vm._s(
-                                            unidad_productiva.sector.name
-                                          ) +
-                                          " "
-                                      ),
-                                      _c("br"),
-                                      _vm._v(" "),
-                                      _c("b", [_vm._v(" Cantidad: ")]),
-                                      _vm._v(
-                                        " " +
-                                          _vm._s(
-                                            unidad_productiva.amount +
-                                              " " +
-                                              unidad_productiva.measure
-                                          ) +
-                                          " "
-                                      ),
-                                      _c("br"),
-                                      _vm._v(" "),
-                                      _c("b", [_vm._v(" Observaciones: ")]),
-                                      _vm._v(
-                                        " " +
-                                          _vm._s(unidad_productiva.note) +
-                                          " "
-                                      ),
-                                      _c("br"),
-                                      _vm._v(" "),
-                                      _c("hr")
-                                    ]
-                                  )
-                                }),
-                                0
-                              )
+                                "li",
+                                { staticClass: "list-group-item" },
+                                [
+                                  _c("b", [_vm._v(" Estado: ")]),
+                                  _vm._v(" "),
+                                  lote.status == "process"
+                                    ? [
+                                        _vm._v(
+                                          "\n                                            En Proceso\n                                        "
+                                        )
+                                      ]
+                                    : lote.status == "rojear"
+                                    ? [
+                                        _vm._v(
+                                          "\n                                            Rojear\n                                        "
+                                        )
+                                      ]
+                                    : lote.status == "finished"
+                                    ? [
+                                        _vm._v(
+                                          "\n                                            Procesado\n                                        "
+                                        )
+                                      ]
+                                    : [
+                                        _vm._v(
+                                          "\n                                            Defectuoso\n                                        "
+                                        )
+                                      ]
+                                ],
+                                2
+                              ),
+                              _vm._v(" "),
+                              _c("li", { staticClass: "list-group-item" }, [
+                                _c("b", [_vm._v(" Creado: ")]),
+                                _vm._v(" " + _vm._s(lote.created_at) + " ")
+                              ]),
+                              _vm._v(" "),
+                              _c("li", { staticClass: "list-group-item" }, [
+                                _c("b", [_vm._v(" Modificado: ")]),
+                                _vm._v(" " + _vm._s(lote.updated_at) + " ")
+                              ]),
+                              _vm._v(" "),
+                              _c("li", { staticClass: "list-group-item" }, [
+                                _c("b", [_vm._v(" Unidades Productivas: ")]),
+                                _c("br"),
+                                _c("br"),
+                                _vm._v(" "),
+                                _c(
+                                  "ul",
+                                  { staticClass: "list-group" },
+                                  _vm._l(lote.lote_unidadproductivas, function(
+                                    unidad_productiva,
+                                    index
+                                  ) {
+                                    return _c(
+                                      "li",
+                                      {
+                                        key: index,
+                                        staticClass: "list-group-item"
+                                      },
+                                      [
+                                        _c("b", [
+                                          _vm._v(" Unidad Productiva: ")
+                                        ]),
+                                        _vm._v(
+                                          " " +
+                                            _vm._s(
+                                              unidad_productiva.sector
+                                                .unidadproductiva.name
+                                            ) +
+                                            " "
+                                        ),
+                                        _c("br"),
+                                        _vm._v(" "),
+                                        _c("b", [_vm._v(" Sector: ")]),
+                                        _vm._v(
+                                          " " +
+                                            _vm._s(
+                                              unidad_productiva.sector.name
+                                            ) +
+                                            " "
+                                        ),
+                                        _c("br"),
+                                        _vm._v(" "),
+                                        _c("b", [_vm._v(" Tipo de Cacao: ")]),
+                                        _vm._v(
+                                          " " +
+                                            _vm._s(
+                                              unidad_productiva.sector.type.name
+                                            ) +
+                                            " "
+                                        ),
+                                        _c("br"),
+                                        _vm._v(" "),
+                                        _c("b", [_vm._v(" Cantidad: ")]),
+                                        _vm._v(
+                                          " " +
+                                            _vm._s(
+                                              unidad_productiva.amount +
+                                                " " +
+                                                unidad_productiva.measure
+                                            ) +
+                                            " "
+                                        ),
+                                        _c("br"),
+                                        _vm._v(" "),
+                                        _c("b", [_vm._v(" Observaciones: ")]),
+                                        _vm._v(
+                                          " " +
+                                            _vm._s(unidad_productiva.note) +
+                                            " "
+                                        ),
+                                        _c("br"),
+                                        _vm._v(" "),
+                                        _c("hr")
+                                      ]
+                                    )
+                                  }),
+                                  0
+                                )
+                              ])
                             ])
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _vm._m(3, true)
-                      ])
-                    ]
-                  )
-                ]
-              )
-            ])
-          }),
-          0
-        )
+                          ]),
+                          _vm._v(" "),
+                          _vm._m(2, true)
+                        ])
+                      ]
+                    )
+                  ]
+                )
+              ])
+            }),
+            0
+          )
+        ])
       ])
     ])
   ])
@@ -38778,37 +39733,27 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", [
+    return _c("thead", { staticClass: "thead-dark" }, [
       _c("tr", [
-        _c("th", [_vm._v("ID")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("ID")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Consecutivo")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Consecutivo")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Nombre")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nombre")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Fecha")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Fecha")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Cantidad")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Cantidad")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Obervaciones")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Obervaciones")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Estado")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Estado")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Creado")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Creado")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Modificado")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Modificado")]),
         _vm._v(" "),
-        _c("th", { attrs: { colspan: "3" } }, [_vm._v("Action")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("a", { staticClass: "btn btn-warning", attrs: { href: "#" } }, [
-        _vm._v("Editar")
+        _c("th", { attrs: { scope: "col", colspan: "3" } }, [_vm._v("Action")])
       ])
     ])
   },

@@ -4,17 +4,17 @@
         <div class="">            
             
             <div class="form-group">
-                <label class="text-uppercase" for="consecutive" >Consecutivo: </label>
+                <label class="text-uppercase" for="consecutive" >Consecutivo*: </label>
                 <input class="form-control" v-model="consecutive" value="" type="number" name="consecutive" id="consecutive" required autocomplete="consecutive" autofocus>                                    
                 <p class="text-danger mt-2" v-if="consecutive_error"><small>*Escriba un consecutivo, el siguiente consecutivo es: {{ next_consecutive }}.</small></p>
             </div>
             <div class="form-group">
-                <label class="text-uppercase" for="name" >Nombre: </label>
-                <input class="form-control" v-model="name" value="" type="text" name="name" id="name" autocomplete="name" autofocus>
+                <label class="text-uppercase" for="name" >Nombre*: </label>
+                <input class="form-control" v-model="name" value="" type="text" name="name" id="name" required autocomplete="name" autofocus>
                 
             </div>
             <div class="form-group">
-                <label class="text-uppercase" for="date" >Fecha: </label>
+                <label class="text-uppercase" for="date" >Fecha*: </label>
                 <input class="form-control" v-model="date" type="date" name="date" id="date" required autocomplete="date" autofocus>                    
                 <p class="text-danger mt-2" v-if="date_error"><small>*Asigne una fecha com formato correcto ex: dd/mm/aaaa!.</small></p>
             </div>
@@ -23,15 +23,16 @@
                 <input class="form-control" v-model="note" value="" type="text" name="note" id="note" autocomplete="note" autofocus>
             </div>
             <div class="form-group">
-                <label class="text-uppercase" for="status" >Estado: </label>
+                <label class="text-uppercase" for="status" >Estado*: </label>
                 <select name="status" v-model="status" id="status" class="form-control">
                     <option value="process" selected> En proceso </option>
+                    <option value="rojear"> Rojear </option>
                     <option value="finished"> Procesado </option>
                     <option value="defective"> Defectuoso </option>                                          
                 </select>                
             </div>
             <br>
-            <h1> Origen </h1>
+            <h1> Origenes </h1>
             <hr>
             <div v-for="( input, index ) in lote_unidad_productiva" :key="index">
                 <div class="form-group">

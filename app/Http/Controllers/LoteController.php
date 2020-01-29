@@ -65,7 +65,7 @@ class LoteController extends Controller
 
     public function active( Request $request ) {
         //
-        $lotes = Lote::where( 'isdeleted', false )->with( 'lote_unidadproductivas.sector.unidadproductiva' )->orderBy('consecutive', 'desc')->get(  );
+        $lotes = Lote::where( 'isdeleted', false )->with( 'lote_unidadproductivas.sector.type' )->with( 'lote_unidadproductivas.sector.unidadproductiva' )->orderBy('consecutive', 'desc')->get(  );
         
         if ( $request->wantsJson(  ) ) {
             return $lotes->toJson(  );
@@ -180,6 +180,11 @@ class LoteController extends Controller
     public function show( Request $request, $id )
     {
         //
+        $lote = Lote::where( 'isdeleted', false )->with( 'lote_unidadproductivas.sector.type' )->with( 'lote_unidadproductivas.sector.unidadproductiva.sectores' )->orderBy('consecutive', 'desc')->where( 'id', $id )->first(  );
+
+		if ( $request->wantsJson(  ) ) {
+			return $lote->toJson(  );
+		}
     }
 
     /**
@@ -194,8 +199,8 @@ class LoteController extends Controller
         $user = Auth::user(  ); 
         if ( $user->is_admin ) {
             //
-            $this->data['unidades_productivas'] = UnidadProductiva::where( 'isdeleted', false )->where( 'isactive', true )->get(  );
-            $this->data['sector'] = Sector::where( 'id', $id )->first(  );
+            //$this->data['unidades_productivas'] = UnidadProductiva::where( 'isdeleted', false )->where( 'isactive', true )->get(  );
+            $this->data['id'] = $id;
 
             // Title
             $this->data['title'] = 'Editar Sector - Cacao Oro';
@@ -235,7 +240,7 @@ class LoteController extends Controller
             $this->data['js']['internals'][] = 'bootstrap.min.js';
             $this->data['js']['internals'][] = 'app.js';
             //
-            return view( 'edit_sector' )->with( $this->data );
+            return view( 'edit_lote' )->with( $this->data );
         }
         return abort( 404 );
     }
@@ -250,6 +255,60 @@ class LoteController extends Controller
     public function update( Request $request, $id )
     {
         //
+        if ( Auth::check(  ) ) {
+            //
+            $current_timestamp = date('Y-m-d H:i:s');
+            $sectores = Lote_UnidadProductiva::where( 'lote_id', $id )->get(  );
+            $in_lote = Lote::where( 'id', $id )->update( [
+                'consecutive' => $request->lote['consecutive'],
+                'name' => $request->lote['name'],
+                'date' => $request->lote['date'],
+                'status' => $request->lote['status'],
+                'note' => $request->lote['note'],
+                'isactive' => true,
+                'updated_at' => $current_timestamp
+            ] );
+            if ( $in_lote ) {
+                //
+                foreach( $request->lote['lote_unidadproductivas'] as $value ) {
+                    if ( $value['id'] == null || $value['id'] == '' ) {
+                        $in_sectores = Lote_UnidadProductiva::create( [
+                            'lote_id' => $id,
+                            'sector_id' => $value['sector_id'],
+                            'measure' => $value['measure'],
+                            'amount' => $value['amount'],
+                            'note' => $value['note'],
+                        ] );
+                    } else {
+                        $in_sectores = Lote_UnidadProductiva::where( 'id', $value['id'] )->update( [
+                            'lote_id' => $id,
+                            'sector_id' => $value['sector_id'],
+                            'measure' => $value['measure'],
+                            'amount' => $value['amount'],
+                            'note' => $value['note'],
+                        ] );
+                        }
+                }
+                //
+                foreach ( $sectores as $sector ) {                
+                    $delete = true;
+                    foreach( $request->lote['lote_unidadproductivas'] as $value ) {
+                        if ( $value['id'] == $sector->id ) {
+                            $delete = false;
+                        }
+                    }
+                    if ( $delete == true ) {
+                        $temp = Lote_UnidadProductiva::find( $value['id'] );
+                        $temp->update( [ 'isdeleted' => true ] );
+                    }
+                }
+                //
+                return 'done';
+            } else {
+                return 'error';
+            }
+            
+        }
     }
 
     /**

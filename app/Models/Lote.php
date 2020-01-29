@@ -12,6 +12,6 @@ class Lote extends Model
     protected $guarded = [  ];
   
 	public function lote_unidadproductivas(  ) {
-		return $this->hasMany( 'App\Models\Lote_UnidadProductiva' );
+		return $this->hasMany( 'App\Models\Lote_UnidadProductiva' )->where( 'isdeleted', false );
 	}
 }

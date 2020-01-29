@@ -14,6 +14,10 @@ class Sector extends Model
     public function unidadproductiva(  ) {
         return $this->belongsTo( 'App\Models\UnidadProductiva', 'unidad_productiva_id' );
     }
+
+    public function type(  ) {
+        return $this->belongsTo( 'App\Models\Type', 'type_id' );
+    }
   
 	public function lote_unidadproductivas(  ) {
 		return $this->hasMany( 'App\Models\Lote_UnidadProductiva' );

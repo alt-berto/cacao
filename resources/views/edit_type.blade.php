@@ -4,7 +4,7 @@
 @section('content')
 
 <br><br>
-<h1>Crear Costo</h1><br>
+<h1>Modificar Tipo de Cacao</h1><br>
 <div class="card">
     <div class="card-body">
         <div class="sm">            
@@ -22,11 +22,12 @@
                     <p>{{ \Session::get('success') }}</p>
                 </div><br />
             @endif
-        <form method="POST" action="{{ URL::to('/costos' ) }}">
+        <form method="POST" action="{{ URL::to('/types/'.$type->id ) }}">
+                {{ method_field('PUT') }}
                 @csrf
                 <div class="form-group">
                     <label class="text-uppercase" for="name" >Nombre*: </label>
-                    <input class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" type="text" name="name" id="name" required autocomplete="name" autofocus>                    
+                    <input class="form-control @error('name') is-invalid @enderror" value="{{ $type->name }}" type="text" name="name" id="name" required autocomplete="name" autofocus>                    
                     @error('name')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -35,7 +36,7 @@
                 </div>
                 <div class="form-group">
                     <label class="text-uppercase" for="note" >Nota: </label>
-                    <input class="form-control @error('note') is-invalid @enderror" value="{{ old('note') }}" type="text" name="note" id="note" autocomplete="note" autofocus>                    
+                    <input class="form-control @error('note') is-invalid @enderror" value="{{ $type->note }}" type="text" name="note" id="note" autocomplete="note" autofocus>                    
                     @error('note')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -45,7 +46,7 @@
                 <div class="form-group">
                     <label class="text-uppercase" for="isactive" >Estado: </label>
                     <select name="isactive" id="isactive" class="form-control">                        
-                        @if ( old('isactive') == true ) 
+                        @if ( $type->isactive == true ) 
                             <option value="1" selected> Activo </option>
                             <option value="0"> Inactivo </option>
                         @else
@@ -61,8 +62,8 @@
                 </div>
                 
                             
-                <button class="btn btn-primary" type="submit">Agregar Costo</button>
-            <a class="btn btn-dark" href="{{ URL::to( '/costos' ) }}">Ir a lista de costos</a>
+                <button class="btn btn-primary" type="submit">Actualizar el Tipo de Cacao</button>
+            <a class="btn btn-dark" href="{{ URL::to( '/types' ) }}">Volver</a>
             </form>
         </div>
         

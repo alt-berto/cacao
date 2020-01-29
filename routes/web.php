@@ -23,6 +23,10 @@ Route::resource('costos','CostosController');
 Route::get('costo/create','CostosController@create');
 Route::get('costo/edit/{id}','CostosController@edit');
 
+Route::resource('types','TypeController');
+Route::get('type/create','TypeController@create');
+Route::get('type/edit/{id}','TypeController@edit');
+
 
 Route::resource('sectores','SectorController');
 Route::get('sector/active','SectorController@active');

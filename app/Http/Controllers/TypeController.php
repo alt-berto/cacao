@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use Auth;
 use App\Models\Type;
-use App\Models\Sector;
-use App\Models\UnidadProductiva;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class SectorController extends Controller
+class TypeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,9 +20,9 @@ class SectorController extends Controller
         $user = Auth::user(  ); 
         if ( $user->is_admin ) {
             //
-            $this->data['sectores'] = Sector::where( 'isdeleted', false )->with( 'type' )->with( 'unidadproductiva' )->orderBy('unidad_productiva_id', 'asc')->get(  );
+            $this->data['types'] = Type::where( 'isdeleted', false )->get(  );
             // Title
-            $this->data['title'] = 'Lista de Sectores - Cacao Oro';
+            $this->data['title'] = 'Lista de Tipos de cacaos - Cacao Oro';
 
             // Load Metas
             $this->data['metas'][] = [ 'name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=no' ];
@@ -61,17 +59,17 @@ class SectorController extends Controller
             $this->data['js']['internals'][] = 'bootstrap.min.js';
             $this->data['js']['internals'][] = 'app.js';
             //
-            return view( 'list_sectores' )->with( $this->data );
+            return view( 'list_types' )->with( $this->data );
         }
         return abort( 404 );
     }
 
     public function active( Request $request ) {
         //
-        $sectores = Sector::where( 'isdeleted', false )->with( 'unidadproductiva' )->orderBy('unidad_productiva_id', 'asc')->get(  );
+        $types = Sector::where( 'isdeleted', false )->get(  );
         
         if ( $request->wantsJson(  ) ) {
-            return $sectores->toJson(  );
+            return $types->toJson(  );
         }
     }
 
@@ -84,13 +82,10 @@ class SectorController extends Controller
     {
         //
         $user = Auth::user(  ); 
-        if ( $user->is_admin ) {
-
-            $this->data['unidades_productivas'] = UnidadProductiva::where( 'isdeleted', false )->where( 'isactive', true )->get(  );
-            $this->data['types'] = Type::where( 'isdeleted', false )->where( 'isactive', true )->get(  );
+        if ( $user->is_admin ) {            
 
             // Title
-            $this->data['title'] = 'Crear Sector - Cacao Oro';
+            $this->data['title'] = 'Crear Tipo de Cacao - Cacao Oro';
 
             // Load Metas
             $this->data['metas'][] = [ 'name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=no' ];
@@ -127,7 +122,7 @@ class SectorController extends Controller
             $this->data['js']['internals'][] = 'bootstrap.min.js';
             $this->data['js']['internals'][] = 'app.js';
             //
-            return view( 'create_sector' )->with( $this->data );
+            return view( 'create_type' )->with( $this->data );
         }
         return abort( 404 );
     }
@@ -138,40 +133,31 @@ class SectorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store( Request $request )
+    public function store(Request $request)
     {
+        //
         //
         $this->validate( request(  ), [ 
             'name' => 'required|max:255',
-            'address' => 'max:255', 
-            'lat' => 'max:255', 
-            'long' => 'max:255', 
             'note' => 'max:255',   
         ] );
         //
         $current_timestamp = date('Y-m-d H:i:s');
-        $in_sector = Sector::create( [ 
-            'unidad_productiva_id' => $request->unidad_productiva_id,
-            'type_id' => $request->type_id,
+        $in_type = Type::create( [             
             'name' => $request->name,
-            'address' => $request->address,
-            'size' => $request->size,
-            'lat' => $request->lat,
-            'long' => $request->long,
             'note' => $request->note, 
             'isactive' => $request->isactive,
             'created_at' => $current_timestamp
           ] );        
        
                       
-        return redirect(  )->back(  )->with( 'success', 'Sector agregado correctamente!.' ); 
-         
+        return redirect(  )->back(  )->with( 'success', 'Tipo de Cacao agregado correctamente!.' ); 
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Sector  $sector
+     * @param  \App\Type  $type
      * @return \Illuminate\Http\Response
      */
     public function show( Request $request, $id )
@@ -182,7 +168,7 @@ class SectorController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Sector  $sector
+     * @param  \App\Type  $type
      * @return \Illuminate\Http\Response
      */
     public function edit( Request $request, $id )
@@ -190,13 +176,11 @@ class SectorController extends Controller
         //
         $user = Auth::user(  ); 
         if ( $user->is_admin ) {
-            //
-            $this->data['unidades_productivas'] = UnidadProductiva::where( 'isdeleted', false )->where( 'isactive', true )->get(  );
-            $this->data['types'] = Type::where( 'isdeleted', false )->where( 'isactive', true )->get(  );
-            $this->data['sector'] = Sector::where( 'id', $id )->first(  );
+            //            
+            $this->data['type'] = Type::where( 'id', $id )->first(  );
 
             // Title
-            $this->data['title'] = 'Editar Sector - Cacao Oro';
+            $this->data['title'] = 'Editar Tipo de Cacao - Cacao Oro';
 
             // Load Metas
             $this->data['metas'][] = [ 'name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=no' ];
@@ -233,7 +217,7 @@ class SectorController extends Controller
             $this->data['js']['internals'][] = 'bootstrap.min.js';
             $this->data['js']['internals'][] = 'app.js';
             //
-            return view( 'edit_sector' )->with( $this->data );
+            return view( 'edit_type' )->with( $this->data );
         }
         return abort( 404 );
     }
@@ -242,50 +226,42 @@ class SectorController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Sector  $sector
+     * @param  \App\Type  $type
      * @return \Illuminate\Http\Response
      */
-    public function update( Request $request, $id )
+    public function update(Request $request, $id)
     {
+        //
         //
         $this->validate( request(  ), [ 
             'name' => 'required|max:255',
-            'address' => 'max:255', 
-            'lat' => 'max:255', 
-            'long' => 'max:255', 
             'note' => 'max:255',            
         ] );
         //
         $current_timestamp = date('Y-m-d H:i:s');
-        $in_sector = Sector::where( 'id', $id )->update( [
-            'unidad_productiva_id' => $request->unidad_productiva_id,
-            'type_id' => $request->type_id,
+        $in_type = Type::where( 'id', $id )->update( [            
             'name' => $request->name,
-            'address' => $request->address,
-            'size' => $request->size,
-            'lat' => $request->lat,
-            'long' => $request->long,
             'note' => $request->note,
             'isactive' => $request->isactive,
             'updated_at' => $current_timestamp
         ] );            
         //
                                   
-        return redirect(  )->back(  )->with( 'success', 'Se ha modificado el sector correctamente' ); 
+        return redirect(  )->back(  )->with( 'success', 'Se ha modificado el typo de cacao correctamente' ); 
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Sector  $sector
+     * @param  \App\Type  $type
      * @return \Illuminate\Http\Response
      */
     public function destroy( Request $request, $id )
     {
         //
-        $sector = Sector::find( $id );
-        $name = $sector->name;
-        $sector->update( [ 'isdeleted' => true ] );
-        return redirect(  )->back(  )->with( 'success', 'Se ha eliminado correctamente el sector: '.$name ); 
+        $type = Type::find( $id );
+        $name = $type->name;
+        $type->update( [ 'isdeleted' => true ] );
+        return redirect(  )->back(  )->with( 'success', 'Se ha eliminado correctamente el tipo de cacao: '.$name ); 
     }
 }

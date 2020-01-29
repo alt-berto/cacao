@@ -12,22 +12,23 @@
                 <p>{{ \Session::get('success') }}</p>
             </div><br />
         @endif
-        <table class="table table-striped">
-            <thead>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="thead-dark">
               <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Nota</th>
-                <th>Estado</th>
-                <th>Creado</th>
-                <th>Modificado</th>
-                <th colspan="2">Action</th>
+                <th scope="col">ID</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Nota</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Creado</th>
+                <th scope="col">Modificado</th>
+                <th scope="col" colspan="2">Action</th>
               </tr>
             </thead>
             <tbody>
               @foreach($costos as $costo)
               <tr>
-                <td>{{ $costo['id'] }}</td>
+                <th scope="row">{{ $costo['id'] }}</>
                 <td>{{ $costo['name'] }}</td>
                 <td>{{ $costo['note'] }}</td>
                 <td>
@@ -50,7 +51,8 @@
               </tr>
               @endforeach
             </tbody>
-        </table>
+          </table>
+        </div>
         
     </div>    
 </div><br><br>

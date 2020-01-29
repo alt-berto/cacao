@@ -4,7 +4,7 @@
 @section('content')
 
 <br><br>
-<h1>Crear Costo</h1><br>
+<h1>Crear Tipo de Cacao</h1><br>
 <div class="card">
     <div class="card-body">
         <div class="sm">            
@@ -22,7 +22,7 @@
                     <p>{{ \Session::get('success') }}</p>
                 </div><br />
             @endif
-        <form method="POST" action="{{ URL::to('/costos' ) }}">
+        <form method="POST" action="{{ URL::to('/types' ) }}">
                 @csrf
                 <div class="form-group">
                     <label class="text-uppercase" for="name" >Nombre*: </label>
@@ -61,8 +61,8 @@
                 </div>
                 
                             
-                <button class="btn btn-primary" type="submit">Agregar Costo</button>
-            <a class="btn btn-dark" href="{{ URL::to( '/costos' ) }}">Ir a lista de costos</a>
+                <button class="btn btn-primary" type="submit">Agregar Nuevo Tipo de Cacao</button>
+            <a class="btn btn-dark" href="{{ URL::to( '/types' ) }}">Ir a lista de tipos de cacao</a>
             </form>
         </div>
         

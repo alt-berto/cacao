@@ -26,7 +26,7 @@
                 {{ method_field('PUT') }}
                 @csrf
                 <div class="form-group">
-                    <label class="text-uppercase" for="name" >Nombre: </label>
+                    <label class="text-uppercase" for="name" >Nombre*: </label>
                     <input class="form-control @error('name') is-invalid @enderror" value="{{ $costo->name }}" type="text" name="name" id="name" required autocomplete="name" autofocus>                    
                     @error('name')
                         <span class="invalid-feedback" role="alert">
@@ -36,7 +36,7 @@
                 </div>
                 <div class="form-group">
                     <label class="text-uppercase" for="note" >Nota: </label>
-                    <input class="form-control @error('note') is-invalid @enderror" value="{{ $costo->note }}" type="text" name="note" id="note" required autocomplete="note" autofocus>                    
+                    <input class="form-control @error('note') is-invalid @enderror" value="{{ $costo->note }}" type="text" name="note" id="note" autocomplete="note" autofocus>                    
                     @error('note')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

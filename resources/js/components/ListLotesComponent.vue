@@ -1,19 +1,19 @@
 <template>
 <div class="card">
     <div class="card-body">
-        <table class="table table-striped">
-            <thead>
+        <div class="table-responsive"><table class="table table-hover">
+            <thead class="thead-dark">
               <tr>
-                <th>ID</th>
-                <th>Consecutivo</th>
-                <th>Nombre</th>
-                <th>Fecha</th>
-                <th>Cantidad</th>
-                <th>Obervaciones</th>
-                <th>Estado</th>
-                <th>Creado</th>
-                <th>Modificado</th>
-                <th colspan="3">Action</th>
+                <th scope="col">ID</th>
+                <th scope="col">Consecutivo</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Obervaciones</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Creado</th>
+                <th scope="col">Modificado</th>
+                <th scope="col" colspan="3">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -38,7 +38,7 @@
                 <td>{{ lote.created_at }}</td>
                 <td>{{ lote.updated_at }}</td>
                 <td><a href="#" data-toggle="modal" :data-target="'#modal_id_' + lote.id" class="btn btn-info">Ver Detalle</a></td>
-                <td><a href="#" class="btn btn-warning">Editar</a></td>
+                <td><a :href="base_url + 'lote/edit/' + lote.id" class="btn btn-warning">Editar</a></td>
                 <td><a @click="destroy( lote.id )" class="btn btn-danger">Eliminar</a></td>
                 
                 <!-- Modal -->
@@ -63,6 +63,9 @@
                                         <template v-if="lote.status == 'process'">
                                             En Proceso
                                         </template>
+                                        <template v-else-if="lote.status == 'rojear'">
+                                            Rojear
+                                        </template>
                                         <template v-else-if="lote.status == 'finished'">
                                             Procesado
                                         </template>
@@ -78,6 +81,7 @@
                                             <li class="list-group-item" v-for="( unidad_productiva, index ) in lote.lote_unidadproductivas" :key="index">
                                                 <b> Unidad Productiva: </b> {{ unidad_productiva.sector.unidadproductiva.name }} <br>
                                                 <b> Sector: </b> {{ unidad_productiva.sector.name }} <br>
+                                                <b> Tipo de Cacao: </b> {{ unidad_productiva.sector.type.name }} <br>
                                                 <b> Cantidad: </b> {{ unidad_productiva.amount + ' ' + unidad_productiva.measure }} <br>                                                
                                                 <b> Observaciones: </b> {{ unidad_productiva.note }} <br>
                                                 <hr>
@@ -95,7 +99,7 @@
                 <!-- -->
               </tr>
             </tbody>
-        </table>
+        </table></div>
         
     </div>    
 </div>

@@ -139,6 +139,7 @@ class UnidadProductivaController extends Controller
         $this->validate( request(  ), [ 
             'name' => 'required|max:255',
             'address' => 'max:255',
+            'size' => $request->size,
             'lat' => 'max:255',
             'long' => 'max:255',
             'note' => 'max:255',
@@ -148,6 +149,7 @@ class UnidadProductivaController extends Controller
         $in_unidad_productiva = UnidadProductiva::create( [ 
             'name' => $request->name,
             'address' => $request->address,
+            'size' => $request->size,
             'lat' => $request->lat,
             'long' => $request->long,
             'note' => $request->note, 
