@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call( TypesTableSeeder::class );
         $this->call( SectorTableSeeder::class );
         $this->call( CostoTableSeeder::class );
+        $this->call( EtapasTableSeeder::class );
     }
 }

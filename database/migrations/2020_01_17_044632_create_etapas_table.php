@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProcesosTable extends Migration
+class CreateEtapasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,14 @@ class CreateProcesosTable extends Migration
      */
     public function up()
     {
-        Schema::create('procesos', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('etapas', function (Blueprint $table) {
+            $table->bigIncrements( 'id' );
+            $table->string( 'name' );
+            $table->integer( 'order' );
+            $table->string( 'note' )->nullable(  );
+            $table->boolean( 'isactive' )->nullable( $value = false )->default( true );
             $table->boolean( 'isdeleted' )->nullable( $value = false )->default( false );
-            $table->timestamps();
+            $table->timestamps(  );
         });
     }
 
@@ -27,6 +31,6 @@ class CreateProcesosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('procesos');
+        Schema::dropIfExists('etapas');
     }
 }

@@ -19,9 +19,18 @@ Route::get('unidad/productiva/active','UnidadProductivaController@active');
 Route::get('unidad/productiva/create','UnidadProductivaController@create');
 Route::get('unidad/productiva/edit/{id}','UnidadProductivaController@edit');
 
+Route::resource('etapas','EtapaController');
+Route::get('etapa/active','EtapaController@active');
+Route::get('etapa/create','EtapaController@create');
+Route::get('etapa/edit/{id}','EtapaController@edit');
+
 Route::resource('costos','CostosController');
 Route::get('costo/create','CostosController@create');
 Route::get('costo/edit/{id}','CostosController@edit');
+
+Route::resource('costo/periodos','CostosPeriodosController');
+Route::get('costo/periodo/create','CostosPeriodosController@create');
+Route::get('costo/periodo/edit/{id}','CostosPeriodosController@edit');
 
 Route::resource('types','TypeController');
 Route::get('type/create','TypeController@create');

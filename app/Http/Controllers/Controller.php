@@ -51,6 +51,7 @@ class Controller extends BaseController
             'internals'  => array(  ),
             'externals'  => array(  )
         );
+        //
         $this->data['id'] = '';
         $this->data['costos'] = [];
         $this->data['costo'] = [];
@@ -60,6 +61,10 @@ class Controller extends BaseController
         $this->data['sector'] = [];
         $this->data['types'] = [];
         $this->data['type'] = [];
+        $this->data['costos_periodos'] = [];
+        $this->data['costo_periodo'] = [];
+        $this->data['etapas'] = [];
+        $this->data['etapa'] = [];
     }
 
     // Load Home Index View

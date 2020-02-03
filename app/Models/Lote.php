@@ -13,5 +13,9 @@ class Lote extends Model
   
 	public function lote_unidadproductivas(  ) {
 		return $this->hasMany( 'App\Models\Lote_UnidadProductiva' )->where( 'isdeleted', false );
+    }
+    
+    public function procesos(  ) {
+		return $this->hasMany( 'App\Models\Proceso' )->where( 'isdeleted', false );
 	}
 }

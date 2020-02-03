@@ -19,4 +19,12 @@ class Costos extends Model
     protected $fillable = [
         'name','note', 'isactive', 'created_at', 'updated_at'
     ];
+
+    public function periodos(  ) {
+        return $this->hasMany( 'App\Models\CostosPeriodos' );
+    }
+
+    public function proceso_costo(  ) {
+        return $this->hasMany( 'App\Models\ProcesoCosto' );
+    }
 }

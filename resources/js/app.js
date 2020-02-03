@@ -22,6 +22,9 @@ window.Vue = require('vue');
 Vue.component('list-lotes-component', require('./components/ListLotesComponent.vue').default);
 Vue.component('edit-lote-component', require('./components/EditLoteComponent.vue').default);
 Vue.component('create-lote-component', require('./components/CreateLoteComponent.vue').default);
+//
+Vue.component('list-process-component', require('./components/ListProcessComponent.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

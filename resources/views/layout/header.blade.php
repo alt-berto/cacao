@@ -11,6 +11,11 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <!-- Right Side Of Navbar -->
     <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a id="navbarDropdown" class="nav-link" href="{{ URL::to('/') }}" role="button" v-pre>
+          Procesos <span class="caret"></span>
+        </a>
+    </li>
       <li class="nav-item dropdown">
           <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
             Lotes <span class="caret"></span>
@@ -23,20 +28,7 @@
               Agregar Lotes
           </a>            
         </div>
-      </li>
-      <li class="nav-item dropdown">
-        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-          Tipos de cacao <span class="caret"></span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{{ URL::to('/types') }}" >
-              Listar Tipos de Cacao
-          </a>  
-          <a class="dropdown-item" href="{{ URL::to('/type/create') }}" >
-            Agregar un Nuevo Tipo de Cacao
-          </a>            
-        </div>
-      </li>
+      </li>      
       <li class="nav-item dropdown">
         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
           Costos <span class="caret"></span>
@@ -47,6 +39,19 @@
           </a>  
           <a class="dropdown-item" href="{{ URL::to('/costo/create') }}" >
             Agregar Costo
+          </a>            
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+          Costos por Periodo <span class="caret"></span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{{ URL::to('/costo/periodos/') }}" >
+              Listar Costos por Periodo
+          </a>  
+          <a class="dropdown-item" href="{{ URL::to('/costo/periodo/create') }}" >
+            Agregar Costo por Periodo
           </a>            
         </div>
       </li>
@@ -76,7 +81,20 @@
       </a>            
     </div>
   </li>
-    <li class="nav-item dropdown">
+  <li class="nav-item dropdown">
+    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+      Tipos de cacao <span class="caret"></span>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+      <a class="dropdown-item" href="{{ URL::to('/types') }}" >
+          Listar Tipos de Cacao
+      </a>  
+      <a class="dropdown-item" href="{{ URL::to('/type/create') }}" >
+        Agregar un Nuevo Tipo de Cacao
+      </a>            
+    </div>
+  </li>
+  <li class="nav-item dropdown">
       <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
         Reportes <span class="caret"></span>
       </a>

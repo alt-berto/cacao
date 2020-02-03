@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
-use App\Models\Etapa;
+use App\ProcesoCosto;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
-class EtapaController extends Controller
+class ProcesoCostoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,15 +15,6 @@ class EtapaController extends Controller
     public function index()
     {
         //
-    }
-
-    public function active( Request $request ) {
-        //
-        $etapas = Etapa::where( 'isdeleted', false )->orderBy('order', 'asc')->get(  );
-        
-        if ( $request->wantsJson(  ) ) {
-            return $etapas->toJson(  );
-        }
     }
 
     /**
@@ -52,10 +41,10 @@ class EtapaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Etapa  $etapa
+     * @param  \App\ProcesoCosto  $procesoCosto
      * @return \Illuminate\Http\Response
      */
-    public function show(Etapa $etapa)
+    public function show(ProcesoCosto $procesoCosto)
     {
         //
     }
@@ -63,10 +52,10 @@ class EtapaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Etapa  $etapa
+     * @param  \App\ProcesoCosto  $procesoCosto
      * @return \Illuminate\Http\Response
      */
-    public function edit(Etapa $etapa)
+    public function edit(ProcesoCosto $procesoCosto)
     {
         //
     }
@@ -75,10 +64,10 @@ class EtapaController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Etapa  $etapa
+     * @param  \App\ProcesoCosto  $procesoCosto
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Etapa $etapa)
+    public function update(Request $request, ProcesoCosto $procesoCosto)
     {
         //
     }
@@ -86,10 +75,10 @@ class EtapaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Etapa  $etapa
+     * @param  \App\ProcesoCosto  $procesoCosto
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Etapa $etapa)
+    public function destroy(ProcesoCosto $procesoCosto)
     {
         //
     }

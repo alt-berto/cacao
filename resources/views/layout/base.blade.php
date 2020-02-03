@@ -30,7 +30,7 @@
 <body class="bg-light">
   <div id="app" >
     @include('layout.header')
-    <div class="container" style="height: 100% !important;  margin-bottom:50%; margin-top:2.5%;">
+    <div class="container" style="max-width: 80% !important; height: 100% !important;  margin-bottom:30%; margin-top:2.5%;">
       @yield('content')
     </div>
     @include('layout.footer')
@@ -38,7 +38,7 @@
   </div>
   <!-- Include registered javascript -->
   @foreach ($js['internals'] as $internal)
-    <script src="{{ asset('js/') }}/{{ $internal }}" type="application/javascript" /></script>
+    <script src="{{ asset('js/') }}/{{ $internal }}" type="application/javascript"></script>
   @endforeach
   <script>
     $('.carousel').carousel({
